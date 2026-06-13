@@ -43,10 +43,10 @@ Current Web-side pattern generation is built around this library, and the Unity 
 The Web prototype is the main working verification environment right now.
 There are now two separate preview lines:
 
-- `弾幕動作`
+- `Danmaku Motion`
   - route: `/danmaku/index.html`
   - keeps the existing bullet pattern verification workflow
-- `ゲーム動作`
+- `Game Motion`
   - route: `/game/index.html`
   - focuses on player movement, shooting, and core game loop behavior
 
