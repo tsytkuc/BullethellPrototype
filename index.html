@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BullethellPrototype Setup</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(160deg, #030812 0%, #07111f 52%, #10253e 100%);
+        color: #edf5ff;
+        font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      }
+
+      main {
+        width: min(720px, calc(100% - 32px));
+        padding: 32px;
+        border-radius: 24px;
+        background: rgba(8, 20, 37, 0.8);
+        border: 1px solid rgba(141, 206, 255, 0.18);
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      code {
+        padding: 0.12em 0.4em;
+        border-radius: 0.4em;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      a {
+        color: #7cf0c8;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>このプロトタイプは C# バックエンド経由で起動します</h1>
+      <p>
+        現在開いている <code>file://</code> 版は案内ページです。実際の弾幕サンプルは
+        <code>ASP.NET Core</code> で起動してから <code>http://localhost:5000</code> で確認してください。
+      </p>
+      <p>実行手順:</p>
+      <ol>
+        <li><code>.NET 8 SDK</code> をインストール</li>
+        <li>このフォルダで <code>dotnet restore</code></li>
+        <li><code>dotnet run</code></li>
+        <li><a href="http://localhost:5000">http://localhost:5000</a> を開く</li>
+      </ol>
+      <p>詳細は <code>README.md</code> を参照してください。</p>
+    </main>
+  </body>
+</html>

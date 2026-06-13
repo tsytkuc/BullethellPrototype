@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenedictBulletHell.Patterns" Version="1.0.0-ci.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="snapshots/**/*.cs" />
+    <Compile Remove="unity/**/*.cs" />
+    <None Remove="snapshots/**" />
+  </ItemGroup>
+</Project>
