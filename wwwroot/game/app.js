@@ -136,7 +136,7 @@ function getSceneReadyDelay(sceneId) {
 }
 
 function getStandbyMessage(sceneId) {
-  return getSceneDefinition(sceneId)?.standbyMessage ?? "現在のフェーズでは会話表示はありません。";
+  return getSceneDefinition(sceneId)?.standbyMessage ?? "No dialogue is displayed in the current phase.";
 }
 
 function getDialogueBlock() {
@@ -239,7 +239,7 @@ function syncAdvanceUi() {
   advanceButton.disabled = false;
 
   if (state.scene === "stage-intro") {
-    advanceButton.textContent = state.introReady ? "Briefingへ進む" : "導入を待機中";
+    advanceButton.textContent = state.introReady ? "Go to Briefing" : "Waiting for Intro";
     advanceButton.disabled = !state.introReady;
     return;
   }
@@ -248,25 +248,25 @@ function syncAdvanceUi() {
     const block = getDialogueBlock();
     const isLast = block ? state.dialogueIndex >= block.length - 1 : false;
     advanceButton.textContent = isLast
-      ? (state.scene === "dialogue-pre" ? "戦闘を開始" : "クリア表示へ")
-      : "次のセリフへ";
+      ? (state.scene === "dialogue-pre" ? "Start Battle" : "Show Clear Screen")
+      : "Next Line";
     return;
   }
 
   if (state.scene === "battle") {
-    advanceButton.textContent = "戦闘進行中";
+    advanceButton.textContent = "Battle in Progress";
     advanceButton.disabled = true;
     return;
   }
 
   if (state.scene === "stage-clear") {
-    advanceButton.textContent = state.clearReady ? `${config.stageLabel}をやり直す` : "集計中";
+    advanceButton.textContent = state.clearReady ? `${config.stageLabel} Restart` : "Processing Results";
     advanceButton.disabled = !state.clearReady;
     return;
   }
 
   if (state.scene === "game-over") {
-    advanceButton.textContent = state.gameOverReady ? `${config.stageLabel}を再挑戦` : "復旧中";
+    advanceButton.textContent = state.gameOverReady ? `${config.stageLabel} Retry` : "Recovering";
     advanceButton.disabled = !state.gameOverReady;
   }
 }
@@ -975,7 +975,7 @@ window.addEventListener("keyup", onKeyUp);
 
 bootstrap().catch((error) => {
   console.error(error);
-  dialogueText.textContent = "ステージ定義の読み込みに失敗しました。";
-  flowSummary.textContent = "C# 側の共有定義を確認してください。";
+  dialogueText.textContent = "Failed to load stage data.";
+  flowSummary.textContent = "Check the shared C# definitions.";
   advanceButton.disabled = true;
 });

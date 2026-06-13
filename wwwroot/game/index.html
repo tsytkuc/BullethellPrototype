@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,10 +11,10 @@
       <section class="hero">
         <div class="hero__copy">
           <p class="eyebrow">Preview B</p>
-          <h1>ゲーム動作</h1>
+          <h1>Game Motion</h1>
           <p class="lead">
-            ここではシューティングゲームとしての導入演出、会話、戦闘、クリア表示までをひとつの流れとして確認します。
-            まずは Stage 1 の仮実装として、全体のテンポと手触りを固めていきます。
+            This preview verifies a full shooter flow from intro and dialogue to battle and clear.
+            It starts with a Stage 1 prototype to refine pacing and feel.
           </p>
         </div>
         <div class="panel panel--controls">
@@ -34,8 +34,8 @@
             <div><dt>FPS</dt><dd id="fpsCount">0</dd></div>
           </div>
           <p class="pattern-description">
-            Arrow / WASD で移動、Space でショット、Shift で低速移動、B でボム、Enter で会話送り。<br />
-            会話と戦闘のつながりを確認するための試作ラインです。
+            Move with Arrow / WASD, shoot with Space, focus with Shift, bomb with B, and advance dialogue with Enter.<br />
+            This line is for validating the connection between dialogue and battle.
           </p>
         </div>
       </section>
@@ -44,9 +44,9 @@
         <div class="flow-header">
           <div>
             <p class="stage-title">Stage Flow</p>
-            <p class="stage-subtitle">導入からクリアまでを1本の進行として確認します</p>
+            <p class="stage-subtitle">Review the full flow from intro to clear as one sequence</p>
           </div>
-          <p class="flow-summary" id="flowSummary">Stage 1 の導入を開始します。</p>
+          <p class="flow-summary" id="flowSummary">Starting the Stage 1 intro.</p>
         </div>
         <ol class="flow-steps" id="flowSteps"></ol>
       </section>
@@ -56,7 +56,7 @@
           <img
             id="portraitImage"
             src="/game/portrait-guide.svg"
-            alt="仮置きのキャラクタープレースホルダー"
+            alt="Temporary character placeholder"
           />
         </div>
         <div class="dialogue-panel" id="dialoguePanel">
@@ -68,10 +68,10 @@
             <p class="dialogue-step" id="dialogueStep">1 / 1</p>
           </div>
           <p class="dialogue-text" id="dialogueText">
-            通信ラインを接続中。ここに会話テキストが表示されます。
+            Linking communication line. Dialogue text will appear here.
           </p>
           <div class="dialogue-actions">
-            <button id="advanceButton" type="button">進行する</button>
+            <button id="advanceButton" type="button">Advance</button>
           </div>
         </div>
       </section>
@@ -82,7 +82,7 @@
             <p class="stage-title">Game Motion Preview</p>
             <p class="stage-subtitle">Intro, dialogue, battle, and clear flow</p>
           </div>
-          <p class="stage-note">ザコ敵、ボス、敵弾、ボムを仮置きし、まずはステージの骨組みを確認します。</p>
+          <p class="stage-note">Placeholder mobs, boss, enemy shots, and bombs are used to validate the stage skeleton first.</p>
         </div>
         <canvas id="gameCanvas" width="960" height="640" aria-label="Game preview"></canvas>
       </section>

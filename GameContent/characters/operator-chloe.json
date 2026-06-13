@@ -2,7 +2,7 @@
   "id": "operator-chloe",
   "displayName": "Operator Chloe",
   "portraitImagePath": "portrait-guide.svg",
-  "portraitAlt": "仮置きのキャラクタープレースホルダー",
+  "portraitAlt": "Temporary character placeholder",
   "placeholderVisual": true,
   "notes": "Temporary operator portrait used until final character art is ready."
 }

@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BullethellPrototype - Danmaku Motion</title>
-    <link rel="stylesheet" href="/danmaku/style.css" />
+    <title>BullethellPrototype - Bullet Hell Motion</title>
+    <link rel="stylesheet" href="/bullet-hell/style.css" />
   </head>
   <body>
     <main class="layout">
       <section class="hero">
         <div class="hero__copy">
           <p class="eyebrow">Preview A</p>
-          <h1>弾幕動作</h1>
+          <h1>Bullet Hell Motion</h1>
           <p class="lead">
-            C# で生成した弾幕タイムラインを Web 上で再生する確認用プレビューです。
-            弾幕の密度、速度、見え方の検証をここで継続できます。
+            This preview replays C#-generated bullet timelines in the browser.
+            Use it to validate density, speed, and overall bullet hell readability.
           </p>
         </div>
 
@@ -29,14 +29,14 @@
           </label>
           <label class="control">
             <span class="control__label">
-              <span>弾幕の生成量</span>
+              <span>Spawn Amount</span>
               <strong id="densityValue">100%</strong>
             </span>
             <input id="densityRange" type="range" min="1" max="100" step="1" value="100" />
           </label>
           <label class="control">
             <span class="control__label">
-              <span>弾幕の速度</span>
+              <span>Bullet Speed</span>
               <strong id="bulletSpeedValue">100%</strong>
             </span>
             <input id="bulletSpeedRange" type="range" min="1" max="100" step="1" value="100" />
@@ -63,14 +63,14 @@
         <div class="stage-header">
           <div>
             <p class="stage-title">C# Generated Pattern Preview</p>
-            <p class="stage-subtitle">Arrow / WASD で自機移動, Shift で低速移動</p>
+            <p class="stage-subtitle">Move the player with Arrow / WASD, slow movement with Shift</p>
           </div>
-          <p class="stage-note">狙い撃ち系はサンプル生成時点のプレイヤー位置を使用します。</p>
+          <p class="stage-note">Aimed patterns use the player's sampled position at generation time.</p>
         </div>
-        <canvas id="gameCanvas" width="960" height="640" aria-label="Danmaku preview"></canvas>
+        <canvas id="gameCanvas" width="960" height="640" aria-label="Bullet hell preview"></canvas>
       </section>
     </main>
 
-    <script type="module" src="/danmaku/app.js"></script>
+    <script type="module" src="/bullet-hell/app.js"></script>
   </body>
 </html>

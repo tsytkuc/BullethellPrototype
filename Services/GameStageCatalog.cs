@@ -107,12 +107,12 @@ public sealed class GameStageCatalog
     {
         return
         [
-            new("stage-intro", "Stage Intro", "ステージ導入です。短い準備のあと、会話パートへ進みます。", "ステージ開始演出です。準備が整うと、ここから Briefing に接続されます。", true, 1.4f),
-            new("dialogue-pre", "Briefing", "出撃前の会話パートです。内容を送り終えるとゲーム本編に入ります。", "出撃前の通信を準備中です。", true, 0f),
-            new("battle", "Battle", "ゲーム本編です。ザコ敵とボスを突破すると戦闘後会話へ進みます。", "現在はゲーム本編の進行中です。戦闘が終わると、ここに戦闘後の会話が表示されます。", true, 0f),
-            new("dialogue-post", "After Talk", "戦闘後の会話パートです。締めの会話が終わるとステージクリアを表示します。", "戦闘後の通信を準備中です。", true, 0f),
-            new("stage-clear", "Stage Clear", "ステージクリア表示です。ここから最初から再確認できます。", "ステージクリアを表示中です。確認後はここから最初の導入に戻れます。", true, 1.4f),
-            new("game-over", "Game Over", "ゲームオーバーです。ここから再試行できます。", "ミッション失敗です。ここからステージを再試行できます。", false, 1.2f),
+            new("stage-intro", "Stage Intro", "This is the stage intro. After a short ready period, it moves into the briefing.", "This is the stage opening sequence. Once it is ready, the flow connects to the briefing.", true, 1.4f),
+            new("dialogue-pre", "Briefing", "This is the pre-battle dialogue section. Finishing the lines moves into the main battle.", "Preparing the pre-battle communication sequence.", true, 0f),
+            new("battle", "Battle", "This is the main gameplay section. Clearing mobs and the boss advances to the post-battle dialogue.", "The main gameplay section is active. Once the battle ends, the post-battle dialogue appears here.", true, 0f),
+            new("dialogue-post", "After Talk", "This is the post-battle dialogue section. Finishing it shows the stage clear screen.", "Preparing the post-battle communication sequence.", true, 0f),
+            new("stage-clear", "Stage Clear", "This is the stage clear screen. You can restart the stage flow from here.", "The stage clear screen is active. After reviewing it, you can return to the first intro step.", true, 1.4f),
+            new("game-over", "Game Over", "This is the game over screen. You can retry the stage from here.", "Mission failed. You can retry the stage from here.", false, 1.2f),
         ];
     }
 

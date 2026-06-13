@@ -1,6 +1,6 @@
 # BullethellPrototype
 
-BullethellPrototype is a bullet hell prototype project for validating danmaku algorithms in the browser while keeping a Unity migration path in parallel.
+BullethellPrototype is a bullet hell prototype project for validating bullet hell algorithms in the browser while keeping a Unity migration path in parallel.
 
 This repository is being developed with `Codex + GPT-5.4`.
 
@@ -43,8 +43,8 @@ Current Web-side pattern generation is built around this library, and the Unity 
 The Web prototype is the main working verification environment right now.
 There are now two separate preview lines:
 
-- `Danmaku Motion`
-  - route: `/danmaku/index.html`
+- `Bullet Hell Motion`
+  - route: `/bullet-hell/index.html`
   - keeps the existing bullet pattern verification workflow
 - `Game Motion`
   - route: `/game/index.html`
@@ -97,7 +97,7 @@ http://127.0.0.1:5000
 From the preview hub, choose either:
 
 ```text
-/danmaku/index.html
+/bullet-hell/index.html
 /game/index.html
 ```
 

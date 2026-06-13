@@ -285,6 +285,6 @@ restartButton.addEventListener("click", () => {
 window.addEventListener("keydown", (event) => keys.add(event.key));
 window.addEventListener("keyup", (event) => keys.delete(event.key));
 loadPatterns().catch((error) => {
-  patternDescription.textContent = `API の読み込みに失敗しました: ${error.message}`;
+  patternDescription.textContent = `Failed to load the API: ${error.message}`;
 });
 requestAnimationFrame(tick);

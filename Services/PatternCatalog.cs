@@ -19,7 +19,7 @@ public sealed class PatternCatalog
             ["spiral-bloom"] = new(
                 "spiral-bloom",
                 "Spiral Bloom",
-                "連続回転する基本スパイラル。密度と回転速度の確認向け。",
+                "A foundational continuous spiral for validating density and rotation speed.",
                 () => Pattern.Spiral(
                     bulletsPerRevolution: 20,
                     totalRevolutions: 6f,
@@ -32,7 +32,7 @@ public sealed class PatternCatalog
             ["ring-pulse"] = new(
                 "ring-pulse",
                 "Ring Pulse",
-                "全方位リングを一定間隔で重ねる基礎パターン。",
+                "A basic full-screen ring pattern layered at fixed intervals.",
                 () => Pattern.Repeat(
                     Pattern.Ring(count: 18, speed: 180f, startAngle: 0f),
                     count: 16,
@@ -42,7 +42,7 @@ public sealed class PatternCatalog
             ["aimed-burst"] = new(
                 "aimed-burst",
                 "Aimed Burst",
-                "プレイヤー初期位置に向けた狙い撃ち。Unity でのボス攻撃に近い挙動確認用。",
+                "An aimed burst toward the player's initial position, useful for approximating boss attacks in Unity.",
                 () => Pattern.Repeat(
                     Pattern.Aimed(count: 5, speed: 220f, spreadAngle: 22f),
                     count: 18,
@@ -53,7 +53,7 @@ public sealed class PatternCatalog
             ["rotating-wave"] = new(
                 "rotating-wave",
                 "Rotating Wave",
-                "波形パターンに回転モディファイアを重ねた複合弾幕。",
+                "A compound bullet hell pattern that layers a rotating modifier over a wave form.",
                 () => Pattern.Rotating(
                     Pattern.Repeat(
                         Pattern.Wave(
@@ -70,7 +70,7 @@ public sealed class PatternCatalog
             ["boss-sequence"] = new(
                 "boss-sequence",
                 "Boss Sequence",
-                "Ring -> Spread -> Spiral を順番に切り替えるボスフェーズ想定。",
+                "A boss-phase style sequence that rotates through Ring -> Spread -> Spiral.",
                 () => Pattern.Sequence(
                     Pattern.Repeat(
                         Pattern.Ring(count: 14, speed: 150f, startAngle: -90f),
