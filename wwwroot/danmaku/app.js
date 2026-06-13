@@ -43,8 +43,8 @@ updateSliderLabels();
 async function loadPatterns() {
   const response = await fetch("/api/patterns");
   state.patternSummaries = await response.json();
-
   patternSelect.innerHTML = "";
+
   for (const pattern of state.patternSummaries) {
     const option = document.createElement("option");
     option.value = pattern.id;
@@ -83,7 +83,6 @@ function restartSimulation() {
 function updatePlayer(deltaTime) {
   let moveX = 0;
   let moveY = 0;
-
   if (keys.has("ArrowLeft") || keys.has("a")) moveX -= 1;
   if (keys.has("ArrowRight") || keys.has("d")) moveX += 1;
   if (keys.has("ArrowUp") || keys.has("w")) moveY -= 1;
@@ -91,21 +90,15 @@ function updatePlayer(deltaTime) {
 
   const length = Math.hypot(moveX, moveY) || 1;
   const speed = keys.has("Shift") ? state.player.focusSpeed : state.player.speed;
-
   state.player.x += (moveX / length) * speed * deltaTime;
   state.player.y += (moveY / length) * speed * deltaTime;
-
   state.player.x = clamp(state.player.x, arenaPadding, canvas.width - arenaPadding);
   state.player.y = clamp(state.player.y, arenaPadding, canvas.height - arenaPadding);
 }
 
 function emitScheduledBullets(previousTime, currentTime) {
-  if (!state.sample) {
-    return;
-  }
-
+  if (!state.sample) return;
   const spawns = state.sample.spawns;
-
   while (state.nextSpawnIndex < spawns.length && spawns[state.nextSpawnIndex].spawnTime <= currentTime) {
     const spawn = spawns[state.nextSpawnIndex];
     if (spawn.spawnTime > previousTime && shouldEmitSpawn(state.nextSpawnIndex)) {
@@ -128,13 +121,7 @@ function updateBullets(deltaTime) {
   state.bullets = state.bullets.filter((bullet) => {
     bullet.x += bullet.baseVx * speedMultiplier * deltaTime;
     bullet.y += bullet.baseVy * speedMultiplier * deltaTime;
-
-    return (
-      bullet.x > -80 &&
-      bullet.x < canvas.width + 80 &&
-      bullet.y > -80 &&
-      bullet.y < canvas.height + 80
-    );
+    return bullet.x > -80 && bullet.x < canvas.width + 80 && bullet.y > -80 && bullet.y < canvas.height + 80;
   });
 }
 
@@ -144,7 +131,6 @@ function drawBackground(time) {
   gradient.addColorStop(1, "#030711");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   ctx.save();
   ctx.globalAlpha = 0.12;
   for (let i = 0; i < 24; i += 1) {
@@ -157,18 +143,13 @@ function drawBackground(time) {
 }
 
 function drawEmitter() {
-  if (!state.sample) {
-    return;
-  }
-
+  if (!state.sample) return;
   ctx.save();
   ctx.translate(state.sample.originX, state.sample.originY);
-
   ctx.beginPath();
   ctx.fillStyle = "#ffd166";
   ctx.arc(0, 0, 18, 0, TAU);
   ctx.fill();
-
   ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
   ctx.lineWidth = 2;
   ctx.beginPath();
@@ -176,17 +157,6 @@ function drawEmitter() {
   ctx.lineTo(0, -26);
   ctx.lineTo(20, -12);
   ctx.stroke();
-
-  if (state.sample.targetX !== null && state.sample.targetY !== null) {
-    ctx.setLineDash([6, 6]);
-    ctx.strokeStyle = "rgba(255, 107, 122, 0.45)";
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(state.sample.targetX - state.sample.originX, state.sample.targetY - state.sample.originY);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-
   ctx.restore();
 }
 
@@ -202,7 +172,6 @@ function drawBullets() {
 function drawPlayer() {
   ctx.save();
   ctx.translate(state.player.x, state.player.y);
-
   ctx.beginPath();
   ctx.fillStyle = "#ffffff";
   ctx.moveTo(0, -16);
@@ -211,28 +180,15 @@ function drawPlayer() {
   ctx.lineTo(-12, 14);
   ctx.closePath();
   ctx.fill();
-
   ctx.beginPath();
   ctx.fillStyle = "#ff6b7a";
   ctx.arc(0, 0, state.player.radius, 0, TAU);
   ctx.fill();
-
-  if (keys.has("Shift")) {
-    ctx.strokeStyle = "rgba(124, 240, 200, 0.75)";
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(0, 0, 18, 0, TAU);
-    ctx.stroke();
-  }
-
   ctx.restore();
 }
 
 function drawHud() {
-  if (!state.sample) {
-    return;
-  }
-
+  if (!state.sample) return;
   ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
   ctx.font = '14px "Arial Black", sans-serif';
   ctx.fillText(`Pattern: ${state.sample.label}`, 24, canvas.height - 24);
@@ -247,17 +203,13 @@ function draw() {
 }
 
 function tick(timestamp) {
-  if (!state.lastTimestamp) {
-    state.lastTimestamp = timestamp;
-  }
-
+  if (!state.lastTimestamp) state.lastTimestamp = timestamp;
   const deltaTime = Math.min((timestamp - state.lastTimestamp) / 1000, 0.033);
   state.lastTimestamp = timestamp;
 
   if (state.running && state.sample) {
     const previousTime = state.simTime;
     state.simTime += deltaTime * state.playbackSpeed;
-
     if (state.simTime > state.sample.duration) {
       if (state.sample.looping) {
         restartSimulation();
@@ -267,7 +219,6 @@ function tick(timestamp) {
         toggleButton.textContent = "Resume";
       }
     }
-
     emitScheduledBullets(previousTime, state.simTime);
     updatePlayer(deltaTime);
     updateBullets(deltaTime);
@@ -275,7 +226,6 @@ function tick(timestamp) {
 
   state.fps = Math.round(1 / Math.max(deltaTime, 0.0001));
   fpsCount.textContent = String(state.fps);
-
   draw();
   requestAnimationFrame(tick);
 }
@@ -285,10 +235,7 @@ function clamp(value, min, max) {
 }
 
 function shouldEmitSpawn(index) {
-  if (state.densityPercent >= 100) {
-    return true;
-  }
-
+  if (state.densityPercent >= 100) return true;
   const hash = Math.abs(Math.sin((index + 1) * 12.9898) * 43758.5453);
   return (hash - Math.floor(hash)) * 100 < state.densityPercent;
 }
@@ -298,14 +245,10 @@ function updateSpawnCount() {
     spawnCount.textContent = "0";
     return;
   }
-
   let count = 0;
   for (let i = 0; i < state.sample.spawns.length; i += 1) {
-    if (shouldEmitSpawn(i)) {
-      count += 1;
-    }
+    if (shouldEmitSpawn(i)) count += 1;
   }
-
   spawnCount.textContent = String(count);
 }
 
@@ -317,44 +260,31 @@ function updateSliderLabels() {
 patternSelect.addEventListener("change", async () => {
   await loadPatternSample(patternSelect.value);
 });
-
 playbackRange.addEventListener("input", () => {
   state.playbackSpeed = Number(playbackRange.value);
 });
-
 densityRange.addEventListener("input", () => {
   state.densityPercent = Number(densityRange.value);
   updateSliderLabels();
   updateSpawnCount();
   restartSimulation();
 });
-
 bulletSpeedRange.addEventListener("input", () => {
   state.bulletSpeedPercent = Number(bulletSpeedRange.value);
   updateSliderLabels();
 });
-
 toggleButton.addEventListener("click", () => {
   state.running = !state.running;
   toggleButton.textContent = state.running ? "Pause" : "Resume";
 });
-
 restartButton.addEventListener("click", () => {
   state.running = true;
   toggleButton.textContent = "Pause";
   restartSimulation();
 });
-
-window.addEventListener("keydown", (event) => {
-  keys.add(event.key);
-});
-
-window.addEventListener("keyup", (event) => {
-  keys.delete(event.key);
-});
-
+window.addEventListener("keydown", (event) => keys.add(event.key));
+window.addEventListener("keyup", (event) => keys.delete(event.key));
 loadPatterns().catch((error) => {
   patternDescription.textContent = `API の読み込みに失敗しました: ${error.message}`;
 });
-
 requestAnimationFrame(tick);

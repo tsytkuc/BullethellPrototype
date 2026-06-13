@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BullethellPrototype - Game Motion</title>
+    <link rel="stylesheet" href="/game/style.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">Preview B</p>
+          <h1>ゲーム動作</h1>
+          <p class="lead">
+            ここではシューティングゲームとしての導入演出、会話、戦闘、クリア表示までをひとつの流れとして確認します。
+            まずは Stage 1 の仮実装として、全体のテンポと手触りを固めていきます。
+          </p>
+        </div>
+        <div class="panel panel--controls">
+          <div class="status-grid">
+            <div><dt>Stage</dt><dd id="stageCount">Stage 1</dd></div>
+            <div><dt>Phase</dt><dd id="phaseLabel">Intro</dd></div>
+            <div><dt>Lives</dt><dd id="lifeCount">3</dd></div>
+            <div><dt>Bombs</dt><dd id="bombCount">3</dd></div>
+            <div><dt>Score</dt><dd id="scoreCount">0</dd></div>
+            <div><dt>Shots</dt><dd id="shotCount">0</dd></div>
+            <div><dt>Enemy</dt><dd id="enemyLabel">None</dd></div>
+            <div><dt>FPS</dt><dd id="fpsCount">0</dd></div>
+          </div>
+          <p class="pattern-description">
+            Arrow / WASD で移動、Space でショット、Shift で低速移動、B でボム、Enter で会話送り。<br />
+            会話と戦闘のつながりを確認するための試作ラインです。
+          </p>
+        </div>
+      </section>
+
+      <section class="flow-shell">
+        <div class="flow-header">
+          <div>
+            <p class="stage-title">Stage Flow</p>
+            <p class="stage-subtitle">導入からクリアまでを1本の進行として確認します</p>
+          </div>
+          <p class="flow-summary" id="flowSummary">Stage 1 の導入を開始します。</p>
+        </div>
+        <ol class="flow-steps" id="flowSteps"></ol>
+      </section>
+
+      <section class="dialogue-shell">
+        <div class="portrait-panel" id="portraitPanel">
+          <img
+            id="portraitImage"
+            src="/game/portrait-guide.svg"
+            alt="仮置きのキャラクタープレースホルダー"
+          />
+        </div>
+        <div class="dialogue-panel" id="dialoguePanel">
+          <div class="dialogue-header">
+            <div>
+              <p class="stage-title">Story Beat</p>
+              <p class="stage-subtitle" id="speakerLabel">Operator Chloe</p>
+            </div>
+            <p class="dialogue-step" id="dialogueStep">1 / 1</p>
+          </div>
+          <p class="dialogue-text" id="dialogueText">
+            通信ラインを接続中。ここに会話テキストが表示されます。
+          </p>
+          <div class="dialogue-actions">
+            <button id="advanceButton" type="button">進行する</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage-shell">
+        <div class="stage-header">
+          <div>
+            <p class="stage-title">Game Motion Preview</p>
+            <p class="stage-subtitle">Intro, dialogue, battle, and clear flow</p>
+          </div>
+          <p class="stage-note">ザコ敵、ボス、敵弾、ボムを仮置きし、まずはステージの骨組みを確認します。</p>
+        </div>
+        <canvas id="gameCanvas" width="960" height="640" aria-label="Game preview"></canvas>
+      </section>
+    </main>
+
+    <script type="module" src="/game/app.js"></script>
+  </body>
+</html>

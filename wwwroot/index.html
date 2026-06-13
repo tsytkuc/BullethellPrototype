@@ -3,83 +3,138 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BullethellPrototype</title>
-    <link rel="stylesheet" href="/style.css" />
+    <title>BullethellPrototype Previews</title>
+    <style>
+      :root {
+        --bg: #09111d;
+        --panel: rgba(9, 17, 29, 0.82);
+        --panel-border: rgba(122, 191, 255, 0.2);
+        --text: #eef4ff;
+        --muted: #94abc7;
+        --accent: #7cf0c8;
+        --accent-strong: #ffd166;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--text);
+        font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(124, 240, 200, 0.14), transparent 32%),
+          radial-gradient(circle at top right, rgba(255, 209, 102, 0.14), transparent 28%),
+          linear-gradient(160deg, #040810 0%, #09111d 50%, #132235 100%);
+      }
+      .layout {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 40px 0 56px;
+      }
+      .hero, .card {
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: 24px;
+        padding: 28px;
+        backdrop-filter: blur(12px);
+      }
+      .hero { margin-bottom: 24px; }
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 0.78rem;
+        font-family: "Arial Black", "Avenir Next Condensed", sans-serif;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 3.8vw, 4rem);
+        line-height: 1.04;
+        font-family: "Arial Black", "Avenir Next Condensed", sans-serif;
+      }
+      .lead {
+        margin: 18px 0 0;
+        max-width: 40rem;
+        line-height: 1.8;
+        color: var(--muted);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .card h2 {
+        margin-top: 0;
+        font-family: "Arial Black", "Avenir Next Condensed", sans-serif;
+      }
+      .card p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .link-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 18px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: #061018;
+        background: var(--accent);
+        font-weight: 700;
+      }
+      a.button.secondary {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      @media (max-width: 820px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+    </style>
   </head>
   <body>
     <main class="layout">
       <section class="hero">
-        <div class="hero__copy">
-          <p class="eyebrow">ASP.NET Core + C#</p>
-          <h1>BenedictBulletHell.Patterns で弾幕を試す</h1>
-          <p class="lead">
-            弾の生成は C# 側で行い、ブラウザは描画だけを担当します。
-            Unity に移植しやすいパターン定義を、そのまま Web プロトタイプで確認できます。
+        <p class="eyebrow">BullethellPrototype</p>
+        <h1>Web Preview Hub</h1>
+        <p class="lead">
+          現在の Web プレビューは 2 系統で管理します。
+          `弾幕動作` は既存のアルゴリズム検証ライン、`ゲーム動作` はシューティングゲームとしての操作やループを育てるラインです。
+        </p>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <p class="eyebrow">Preview A</p>
+          <h2>弾幕動作</h2>
+          <p>
+            C# で生成した弾幕タイムラインを Web 上で再生する保存済みプレビューです。
+            パターン、生成量、速度、再生速度の検証をここで継続できます。
           </p>
-        </div>
-
-        <div class="panel panel--controls">
-          <label class="control">
-            <span>Pattern</span>
-            <select id="patternSelect"></select>
-          </label>
-          <label class="control">
-            <span>Playback Speed</span>
-            <input id="playbackRange" type="range" min="0.25" max="2" step="0.05" value="1" />
-          </label>
-          <label class="control">
-            <span class="control__label">
-              <span>弾幕の生成量</span>
-              <strong id="densityValue">100%</strong>
-            </span>
-            <input id="densityRange" type="range" min="1" max="100" step="1" value="100" />
-          </label>
-          <label class="control">
-            <span class="control__label">
-              <span>弾幕の速度</span>
-              <strong id="bulletSpeedValue">100%</strong>
-            </span>
-            <input id="bulletSpeedRange" type="range" min="1" max="100" step="1" value="100" />
-          </label>
-          <div class="actions">
-            <button id="toggleButton" type="button">Pause</button>
-            <button id="restartButton" type="button" class="ghost">Restart</button>
+          <div class="link-row">
+            <a class="button" href="/danmaku/index.html">開く</a>
           </div>
-          <dl class="stats">
-            <div>
-              <dt>Sampled Spawns</dt>
-              <dd id="spawnCount">0</dd>
-            </div>
-            <div>
-              <dt>FPS</dt>
-              <dd id="fpsCount">0</dd>
-            </div>
-          </dl>
-          <p id="patternDescription" class="pattern-description"></p>
-        </div>
-      </section>
+        </article>
 
-      <section class="stage-shell">
-        <div class="stage-header">
-          <div>
-            <p class="stage-title">C# Generated Pattern Preview</p>
-            <p class="stage-subtitle">Arrow / WASD で自機移動, Shift で低速移動</p>
+        <article class="card">
+          <p class="eyebrow">Preview B</p>
+          <h2>ゲーム動作</h2>
+          <p>
+            自機移動、ショット、敵、当たり判定などを詰めていく新しいゲームラインです。
+            まずは最小のゲームループから育てていきます。
+          </p>
+          <div class="link-row">
+            <a class="button" href="/game/index.html">開く</a>
           </div>
-          <p class="stage-note">狙い撃ち系はサンプル生成時点のプレイヤー位置を使用します。</p>
-        </div>
-        <canvas id="gameCanvas" width="960" height="640" aria-label="Danmaku preview"></canvas>
-      </section>
-
-      <section class="panel panel--notes">
-        <h2>構成</h2>
-        <ul>
-          <li>C# の API が弾生成タイムラインを返し、JavaScript は位置更新と描画のみを担当</li>
-          <li>パターン定義は <code>BenedictBulletHell.Patterns</code> の API をそのまま使用</li>
-          <li>Unity 側では同じパターン構成を C# のまま流用しやすい設計</li>
-        </ul>
+        </article>
       </section>
     </main>
-
-    <script type="module" src="/app.js"></script>
   </body>
 </html>

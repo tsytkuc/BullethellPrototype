@@ -1,0 +1,146 @@
+{
+  "id": "stage-1-prototype",
+  "stageLabel": "Stage 1",
+  "flow": [
+    {
+      "scene": "stage-intro",
+      "label": "Stage Intro",
+      "summary": "Stage 1 \u306E\u5C0E\u5165\u8868\u793A\u3067\u3059\u3002\u77ED\u3044\u6E96\u5099\u306E\u3042\u3068\u3001\u4F1A\u8A71\u30D1\u30FC\u30C8\u3078\u9032\u307F\u307E\u3059\u3002"
+    },
+    {
+      "scene": "dialogue-pre",
+      "label": "Briefing",
+      "summary": "\u51FA\u6483\u524D\u306E\u4F1A\u8A71\u30D1\u30FC\u30C8\u3067\u3059\u3002\u5185\u5BB9\u3092\u9001\u308A\u7D42\u3048\u308B\u3068\u30B2\u30FC\u30E0\u672C\u7DE8\u306B\u5165\u308A\u307E\u3059\u3002"
+    },
+    {
+      "scene": "battle",
+      "label": "Battle",
+      "summary": "\u30B2\u30FC\u30E0\u672C\u7DE8\u3067\u3059\u3002\u30B6\u30B3\u6575\u3068\u30DC\u30B9\u3092\u7A81\u7834\u3059\u308B\u3068\u6226\u95D8\u5F8C\u4F1A\u8A71\u3078\u9032\u307F\u307E\u3059\u3002"
+    },
+    {
+      "scene": "dialogue-post",
+      "label": "After Talk",
+      "summary": "\u6226\u95D8\u5F8C\u306E\u4F1A\u8A71\u30D1\u30FC\u30C8\u3067\u3059\u3002\u7DE0\u3081\u306E\u4F1A\u8A71\u304C\u7D42\u308F\u308B\u3068\u30B9\u30C6\u30FC\u30B8\u30AF\u30EA\u30A2\u3092\u8868\u793A\u3057\u307E\u3059\u3002"
+    },
+    {
+      "scene": "stage-clear",
+      "label": "Stage Clear",
+      "summary": "\u30B9\u30C6\u30FC\u30B8\u30AF\u30EA\u30A2\u8868\u793A\u3067\u3059\u3002\u3053\u3053\u304B\u3089 Stage 1 \u3092\u6700\u521D\u304B\u3089\u518D\u78BA\u8A8D\u3067\u304D\u307E\u3059\u3002"
+    }
+  ],
+  "sceneText": {
+    "labels": {
+      "stage-intro": "Stage Intro",
+      "dialogue-pre": "Briefing",
+      "battle": "Battle",
+      "dialogue-post": "After Talk",
+      "stage-clear": "Clear",
+      "game-over": "Game Over"
+    },
+    "standbyMessages": {
+      "stage-intro": "Stage 1 \u306E\u958B\u59CB\u6F14\u51FA\u3067\u3059\u3002\u6E96\u5099\u304C\u6574\u3046\u3068\u3001\u3053\u3053\u304B\u3089 Briefing \u306B\u63A5\u7D9A\u3055\u308C\u307E\u3059\u3002",
+      "battle": "\u73FE\u5728\u306F\u30B2\u30FC\u30E0\u672C\u7DE8\u306E\u9032\u884C\u4E2D\u3067\u3059\u3002\u6226\u95D8\u304C\u7D42\u308F\u308B\u3068\u3001\u3053\u3053\u306B\u6226\u95D8\u5F8C\u306E\u4F1A\u8A71\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u3002",
+      "stage-clear": "Stage 1 Clear \u3092\u8868\u793A\u4E2D\u3067\u3059\u3002\u78BA\u8A8D\u5F8C\u306F\u3053\u3053\u304B\u3089\u6700\u521D\u306E\u5C0E\u5165\u306B\u623B\u308C\u307E\u3059\u3002",
+      "game-over": "\u30DF\u30C3\u30B7\u30E7\u30F3\u5931\u6557\u3067\u3059\u3002\u3053\u3053\u304B\u3089 Stage 1 \u3092\u518D\u8A66\u884C\u3067\u304D\u307E\u3059\u3002"
+    }
+  },
+  "dialogue": {
+    "placeholderSpeaker": "System",
+    "preBattle": [
+      {
+        "speaker": "Operator Chloe",
+        "text": "Stage 1, city-edge corridor. Sensors say the air is filthy with weak hostiles, so let\u0027s use them as a warm-up."
+      },
+      {
+        "speaker": "Operator Chloe",
+        "text": "Your frame is armed with a forward shot and three emergency bombs. If the screen gets ugly, don\u0027t be shy about clearing space."
+      },
+      {
+        "speaker": "Operator Chloe",
+        "text": "One command unit is hiding behind the trash waves. Break the formation, drop the boss, and come back in one piece."
+      }
+    ],
+    "postBattle": [
+      {
+        "speaker": "Operator Chloe",
+        "text": "Clean finish. The lane is ours, and your timing on that bomb was better than I expected."
+      },
+      {
+        "speaker": "Operator Chloe",
+        "text": "We\u0027ll tighten the patterns, add proper boss scripting, and make the next stage meaner. For now, log this as a successful prototype pass."
+      }
+    ]
+  },
+  "player": {
+    "lives": 3,
+    "bombs": 3,
+    "radius": 10,
+    "speed": 320,
+    "focusSpeed": 170,
+    "shotCooldown": 0.08,
+    "bombCooldown": 0.5,
+    "respawnInvulnerabilitySeconds": 2,
+    "bombInvulnerabilitySeconds": 2.2,
+    "shots": [
+      {
+        "offsetX": -9,
+        "offsetY": -14,
+        "speed": -620,
+        "radius": 4,
+        "damage": 1
+      },
+      {
+        "offsetX": 9,
+        "offsetY": -14,
+        "speed": -620,
+        "radius": 4,
+        "damage": 1
+      },
+      {
+        "offsetX": 0,
+        "offsetY": -22,
+        "speed": -700,
+        "radius": 4,
+        "damage": 2
+      }
+    ]
+  },
+  "battle": {
+    "mobSpawnDelaySeconds": 0.8,
+    "mobSpawnIntervalSeconds": 1.3,
+    "bossSpawnAfterSeconds": 12,
+    "mobBulletCount": 3,
+    "mobBulletSpeed": 180,
+    "mobSpreadAngleRadians": 0.22,
+    "mobFireCooldownSeconds": 1.35,
+    "bossAimedBulletCount": 7,
+    "bossAimedBulletSpeed": 230,
+    "bossAimedSpreadRadians": 0.18,
+    "bossAimedCooldownSeconds": 0.95,
+    "bossRadialBulletCount": 16,
+    "bossRadialBulletSpeed": 170,
+    "bossRadialCooldownSeconds": 2.3,
+    "bombBossDamage": 40,
+    "bombMobDamage": 999,
+    "mob": {
+      "hitPoints": 6,
+      "width": 34,
+      "height": 34,
+      "speedY": 110,
+      "drift": 60,
+      "startX": 140,
+      "startY": -30,
+      "entranceY": 0
+    },
+    "boss": {
+      "hitPoints": 260,
+      "width": 140,
+      "height": 100,
+      "speedY": 80,
+      "drift": 210,
+      "startX": 480,
+      "startY": -120,
+      "entranceY": 120
+    }
+  }
+}

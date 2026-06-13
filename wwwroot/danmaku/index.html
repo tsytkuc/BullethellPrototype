@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BullethellPrototype - Danmaku Motion</title>
+    <link rel="stylesheet" href="/danmaku/style.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">Preview A</p>
+          <h1>弾幕動作</h1>
+          <p class="lead">
+            C# で生成した弾幕タイムラインを Web 上で再生する確認用プレビューです。
+            弾幕の密度、速度、見え方の検証をここで継続できます。
+          </p>
+        </div>
+
+        <div class="panel panel--controls">
+          <label class="control">
+            <span>Pattern</span>
+            <select id="patternSelect"></select>
+          </label>
+          <label class="control">
+            <span>Playback Speed</span>
+            <input id="playbackRange" type="range" min="0.25" max="2" step="0.05" value="1" />
+          </label>
+          <label class="control">
+            <span class="control__label">
+              <span>弾幕の生成量</span>
+              <strong id="densityValue">100%</strong>
+            </span>
+            <input id="densityRange" type="range" min="1" max="100" step="1" value="100" />
+          </label>
+          <label class="control">
+            <span class="control__label">
+              <span>弾幕の速度</span>
+              <strong id="bulletSpeedValue">100%</strong>
+            </span>
+            <input id="bulletSpeedRange" type="range" min="1" max="100" step="1" value="100" />
+          </label>
+          <div class="actions">
+            <button id="toggleButton" type="button">Pause</button>
+            <button id="restartButton" type="button" class="ghost">Restart</button>
+          </div>
+          <dl class="stats">
+            <div>
+              <dt>Sampled Spawns</dt>
+              <dd id="spawnCount">0</dd>
+            </div>
+            <div>
+              <dt>FPS</dt>
+              <dd id="fpsCount">0</dd>
+            </div>
+          </dl>
+          <p id="patternDescription" class="pattern-description"></p>
+        </div>
+      </section>
+
+      <section class="stage-shell">
+        <div class="stage-header">
+          <div>
+            <p class="stage-title">C# Generated Pattern Preview</p>
+            <p class="stage-subtitle">Arrow / WASD で自機移動, Shift で低速移動</p>
+          </div>
+          <p class="stage-note">狙い撃ち系はサンプル生成時点のプレイヤー位置を使用します。</p>
+        </div>
+        <canvas id="gameCanvas" width="960" height="640" aria-label="Danmaku preview"></canvas>
+      </section>
+    </main>
+
+    <script type="module" src="/danmaku/app.js"></script>
+  </body>
+</html>

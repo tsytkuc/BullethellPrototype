@@ -25,8 +25,12 @@ Current Web-side pattern generation is built around this library, and the Unity 
   - ASP.NET Core entry project for the Web prototype
 - `Program.cs`
   - Minimal API and static file hosting
+- `Models/GameStageDto.cs`
+  - Shared stage / dialogue / battle DTOs intended for both Web and Unity migration
 - `Services/PatternCatalog.cs`
   - Pattern definitions and sample spawn generation
+- `Services/GameStageCatalog.cs`
+  - C# source of truth for stage flow, dialogue, and gameplay tuning
 - `wwwroot/`
   - Browser UI, canvas rendering, and runtime controls
 - `unity/`
@@ -37,6 +41,29 @@ Current Web-side pattern generation is built around this library, and the Unity 
 ## Web Preview
 
 The Web prototype is the main working verification environment right now.
+There are now two separate preview lines:
+
+- `弾幕動作`
+  - route: `/danmaku/index.html`
+  - keeps the existing bullet pattern verification workflow
+- `ゲーム動作`
+  - route: `/game/index.html`
+  - focuses on player movement, shooting, and core game loop behavior
+
+### Unity Migration-Oriented Structure
+
+The project is now being reorganized so the Web preview is a thin client over C# stage definitions:
+
+- `Services/GameStageCatalog.cs`
+  - owns the `Stage 1` prototype flow, dialogue, and battle tuning in C#
+- `Program.cs`
+  - exposes `/api/game/stages` and `/api/game/stages/{id}`
+- `wwwroot/game/app.js`
+  - fetches stage definitions from the API instead of hardcoding the flow
+- `unity/Assets/StreamingAssets/Stages/`
+  - JSON export target for the same stage definitions so Unity can read the same data later
+
+This makes it easier to migrate the current Web prototype into Unity by reusing the same stage data shape instead of rewriting stage progression from scratch.
 
 ### Required Environment
 
@@ -61,6 +88,13 @@ Then open:
 http://127.0.0.1:5000
 ```
 
+From the preview hub, choose either:
+
+```text
+/danmaku/index.html
+/game/index.html
+```
+
 ### What You Can Verify on Web
 
 - Bullet pattern switching
@@ -75,6 +109,7 @@ Unity support is currently in a hybrid preparation state.
 
 - The Unity project scaffold exists under `unity/`
 - Runtime prototype scripts for `Bullet`, `BulletSpawner`, and `PatternRunner` are included
+- Shared stage definition JSON is exported to `unity/Assets/StreamingAssets/Stages/`
 - Editor build scripts are included
 - Full end-to-end Unity build flow is not fully stabilized yet
 
