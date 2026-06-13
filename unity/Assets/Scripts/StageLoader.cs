@@ -11,7 +11,23 @@ namespace BullethellPrototype.Unity
         public static IEnumerator LoadStage(string stageId, Action<StageDefinition> onLoaded, Action<string> onError)
         {
             string path = Path.Combine(Application.streamingAssetsPath, "Stages", $"{stageId}.json");
+            yield return LoadJson(path, onLoaded, onError);
+        }
 
+        public static IEnumerator LoadDialogue(string fileName, Action<DialogueScript> onLoaded, Action<string> onError)
+        {
+            string path = Path.Combine(Application.streamingAssetsPath, "game-data", "dialogue", fileName);
+            yield return LoadJson(path, onLoaded, onError);
+        }
+
+        public static IEnumerator LoadCharacter(string fileName, Action<CharacterProfile> onLoaded, Action<string> onError)
+        {
+            string path = Path.Combine(Application.streamingAssetsPath, "game-data", "characters", fileName);
+            yield return LoadJson(path, onLoaded, onError);
+        }
+
+        private static IEnumerator LoadJson<T>(string path, Action<T> onLoaded, Action<string> onError)
+        {
             if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase) ||
                 path.StartsWith("jar:", StringComparison.OrdinalIgnoreCase))
             {
@@ -38,16 +54,16 @@ namespace BullethellPrototype.Unity
             TryParse(json, onLoaded, onError);
         }
 
-        private static void TryParse(string json, Action<StageDefinition> onLoaded, Action<string> onError)
+        private static void TryParse<T>(string json, Action<T> onLoaded, Action<string> onError)
         {
-            StageDefinition stage = JsonUtility.FromJson<StageDefinition>(json);
-            if (stage == null || string.IsNullOrWhiteSpace(stage.id))
+            T value = JsonUtility.FromJson<T>(json);
+            if (value == null)
             {
-                onError?.Invoke("Failed to parse stage json.");
+                onError?.Invoke("Failed to parse json.");
                 return;
             }
 
-            onLoaded?.Invoke(stage);
+            onLoaded?.Invoke(value);
         }
     }
 }

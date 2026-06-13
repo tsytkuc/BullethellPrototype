@@ -31,11 +31,6 @@ public sealed class GameStageCatalog
             .ToList();
     }
 
-    public IReadOnlyList<GameStageDto> GetAll()
-    {
-        return _stages.Values.ToList();
-    }
-
     public GameStageDto? TryGet(string id)
     {
         return _stages.TryGetValue(id, out var stage) ? stage : null;
@@ -61,6 +56,16 @@ public sealed class GameStageCatalog
             if (string.IsNullOrWhiteSpace(stage.Id))
             {
                 throw new InvalidOperationException("Stage id is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(stage.CharacterProfileFile))
+            {
+                throw new InvalidOperationException($"Stage '{stage.Id}' must define CharacterProfileFile.");
+            }
+
+            if (string.IsNullOrWhiteSpace(stage.DialogueScriptFile))
+            {
+                throw new InvalidOperationException($"Stage '{stage.Id}' must define DialogueScriptFile.");
             }
 
             if (stage.Scenes.Count == 0)
@@ -117,20 +122,9 @@ public sealed class GameStageCatalog
             Id: "stage-1-prototype",
             StageLabel: "Stage 1",
             Description: "City-edge corridor prototype with one warm-up wave set and a single boss finish.",
+            CharacterProfileFile: "operator-chloe.json",
+            DialogueScriptFile: "stage-1-prototype.json",
             Scenes: BuildDefaultScenes(),
-            Dialogue: new DialogueSetDto(
-                PlaceholderSpeaker: "System",
-                PreBattle:
-                [
-                    new("Operator Chloe", "Stage 1, city-edge corridor. Sensors say the air is filthy with weak hostiles, so let's use them as a warm-up."),
-                    new("Operator Chloe", "Your frame is armed with a forward shot and three emergency bombs. If the screen gets ugly, don't be shy about clearing space."),
-                    new("Operator Chloe", "One command unit is hiding behind the trash waves. Break the formation, drop the boss, and come back in one piece."),
-                ],
-                PostBattle:
-                [
-                    new("Operator Chloe", "Clean finish. The lane is ours, and your timing on that bomb was better than I expected."),
-                    new("Operator Chloe", "We'll tighten the patterns, add proper boss scripting, and make the next stage meaner. For now, log this as a successful prototype pass."),
-                ]),
             Player: BuildDefaultPlayer(),
             Battle: new BattleTuningDto(
                 BombBossDamage: 40,
@@ -190,20 +184,9 @@ public sealed class GameStageCatalog
             Id: "stage-2-prototype",
             StageLabel: "Stage 2",
             Description: "Industrial channel prototype with longer wave chaining and a denser boss phase.",
+            CharacterProfileFile: "operator-chloe.json",
+            DialogueScriptFile: "stage-2-prototype.json",
             Scenes: BuildDefaultScenes(),
-            Dialogue: new DialogueSetDto(
-                PlaceholderSpeaker: "System",
-                PreBattle:
-                [
-                    new("Operator Chloe", "Stage 2 opens over the flood channel. Visibility is bad, and the formation ahead is tighter than the last run."),
-                    new("Operator Chloe", "Expect more pressure from the side lanes. Keep the center clear, save one bomb for the command craft, and don't drift too wide."),
-                    new("Operator Chloe", "If this flow survives Stage 2, we can trust the current data model for a longer campaign chain."),
-                ],
-                PostBattle:
-                [
-                    new("Operator Chloe", "Good. Stage 2 held together without the flow collapsing, and that's exactly what this prototype needed to prove."),
-                    new("Operator Chloe", "Next we can start translating the same stage data into Unity objects instead of rebuilding the rules by hand."),
-                ]),
             Player: BuildDefaultPlayer() with
             {
                 Bombs = 2,

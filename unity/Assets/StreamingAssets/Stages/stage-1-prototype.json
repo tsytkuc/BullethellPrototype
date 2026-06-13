@@ -2,6 +2,8 @@
   "id": "stage-1-prototype",
   "stageLabel": "Stage 1",
   "description": "City-edge corridor prototype with one warm-up wave set and a single boss finish.",
+  "characterProfileFile": "operator-chloe.json",
+  "dialogueScriptFile": "stage-1-prototype.json",
   "scenes": [
     {
       "scene": "stage-intro",
@@ -52,33 +54,6 @@
       "readyDelaySeconds": 1.2
     }
   ],
-  "dialogue": {
-    "placeholderSpeaker": "System",
-    "preBattle": [
-      {
-        "speaker": "Operator Chloe",
-        "text": "Stage 1, city-edge corridor. Sensors say the air is filthy with weak hostiles, so let\u0027s use them as a warm-up."
-      },
-      {
-        "speaker": "Operator Chloe",
-        "text": "Your frame is armed with a forward shot and three emergency bombs. If the screen gets ugly, don\u0027t be shy about clearing space."
-      },
-      {
-        "speaker": "Operator Chloe",
-        "text": "One command unit is hiding behind the trash waves. Break the formation, drop the boss, and come back in one piece."
-      }
-    ],
-    "postBattle": [
-      {
-        "speaker": "Operator Chloe",
-        "text": "Clean finish. The lane is ours, and your timing on that bomb was better than I expected."
-      },
-      {
-        "speaker": "Operator Chloe",
-        "text": "We\u0027ll tighten the patterns, add proper boss scripting, and make the next stage meaner. For now, log this as a successful prototype pass."
-      }
-    ]
-  },
   "player": {
     "lives": 3,
     "bombs": 3,

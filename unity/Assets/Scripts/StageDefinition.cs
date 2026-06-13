@@ -8,8 +8,9 @@ namespace BullethellPrototype.Unity
         public string id;
         public string stageLabel;
         public string description;
+        public string characterProfileFile;
+        public string dialogueScriptFile;
         public SceneDefinition[] scenes;
-        public DialogueSet dialogue;
         public PlayerTuning player;
         public BattleTuning battle;
         public PatternReference[] patterns;
@@ -24,21 +25,6 @@ namespace BullethellPrototype.Unity
         public string standbyMessage;
         public bool showInFlow;
         public float readyDelaySeconds;
-    }
-
-    [Serializable]
-    public sealed class DialogueSet
-    {
-        public string placeholderSpeaker;
-        public DialogueLine[] preBattle;
-        public DialogueLine[] postBattle;
-    }
-
-    [Serializable]
-    public sealed class DialogueLine
-    {
-        public string speaker;
-        public string text;
     }
 
     [Serializable]

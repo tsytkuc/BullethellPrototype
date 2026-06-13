@@ -3,11 +3,14 @@ using BullethellPrototype.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<PatternCatalog>();
+builder.Services.AddSingleton<GameContentExporter>();
 builder.Services.AddSingleton<GameStageCatalog>();
 
 var app = builder.Build();
 
 var stageCatalog = app.Services.GetRequiredService<GameStageCatalog>();
+var contentExporter = app.Services.GetRequiredService<GameContentExporter>();
+contentExporter.ExportSharedContent();
 await stageCatalog.ExportUnityJsonAsync(app.Environment.ContentRootPath);
 
 app.UseDefaultFiles();

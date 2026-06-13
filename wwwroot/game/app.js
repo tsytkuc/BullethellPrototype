@@ -25,6 +25,8 @@ const keys = new Set();
 
 let stageSummaries = [];
 let config = null;
+let dialogueScript = null;
+let characterProfile = null;
 let currentStageId = "stage-1-prototype";
 
 const state = {
@@ -93,6 +95,10 @@ function populateStageSelect() {
 async function changeStage(stageId) {
   currentStageId = stageId;
   config = await fetchJson(`/api/game/stages/${stageId}`);
+  dialogueScript = await fetchJson(`/game/data/dialogue/${config.dialogueScriptFile}`);
+  characterProfile = await fetchJson(`/game/data/characters/${config.characterProfileFile}`);
+  portraitImage.src = `/game/${characterProfile.portraitImagePath}`;
+  portraitImage.alt = characterProfile.portraitAlt;
   state.lastTimestamp = 0;
   renderFlowSteps();
   resetForStage();
@@ -134,8 +140,9 @@ function getStandbyMessage(sceneId) {
 }
 
 function getDialogueBlock() {
-  if (state.scene === "dialogue-pre") return config.dialogue.preBattle;
-  if (state.scene === "dialogue-post") return config.dialogue.postBattle;
+  if (!dialogueScript) return null;
+  if (state.scene === "dialogue-pre") return dialogueScript.preBattle;
+  if (state.scene === "dialogue-post") return dialogueScript.postBattle;
   return null;
 }
 
@@ -192,7 +199,7 @@ function resetForStage() {
 function syncDialogue() {
   const block = getDialogueBlock();
   if (!block) {
-    speakerLabel.textContent = config.dialogue.placeholderSpeaker;
+    speakerLabel.textContent = dialogueScript?.placeholderSpeaker ?? "System";
     dialogueStep.textContent = "- / -";
     dialogueText.textContent = getStandbyMessage(state.scene);
     portraitImage.classList.add("portrait-muted");

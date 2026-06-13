@@ -119,6 +119,7 @@ Unity support is currently in a hybrid preparation state.
 - Runtime prototype scripts for `Bullet`, `BulletSpawner`, and `PatternRunner` are included
 - Shared stage definition JSON is exported to `unity/Assets/StreamingAssets/Stages/`
 - Editor build scripts are included
+- Build targets are prepared for `Windows x64`, `macOS Apple Silicon`, `macOS Intel`, and `macOS Universal`
 - Full end-to-end Unity build flow is not fully stabilized yet
 
 ### Required Environment
@@ -158,6 +159,12 @@ PROJECT_PATH="$PWD/unity" \
 BUILD_METHOD="BuildScript.BuildWindows64" \
 scripts/build-unity-macos.sh
 ```
+
+Additional build methods:
+
+- `BuildScript.BuildMacOSAppleSilicon`
+- `BuildScript.BuildMacOSIntel`
+- `BuildScript.BuildMacOSUniversal`
 
 ### Important Note
 

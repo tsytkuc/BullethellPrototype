@@ -1,8 +1,13 @@
 using System.IO;
 using UnityEditor;
+using UnityEditor.Build;
 
 public static class BuildScript
 {
+    private const int MacArchitectureIntel = 0;
+    private const int MacArchitectureAppleSilicon = 1;
+    private const int MacArchitectureUniversal = 2;
+
     private static readonly string[] Scenes =
     {
         "Assets/Scenes/Main.unity",
@@ -10,12 +15,27 @@ public static class BuildScript
 
     public static void BuildWindows64()
     {
-        Build(BuildTarget.StandaloneWindows64, "Builds/Windows/BullethellPrototype.exe");
+        Build(BuildTarget.StandaloneWindows64, "Builds/Windows-x64/BullethellPrototype.exe");
     }
 
     public static void BuildMacOS()
     {
-        Build(BuildTarget.StandaloneOSX, "Builds/macOS/BullethellPrototype.app");
+        BuildMacOSUniversal();
+    }
+
+    public static void BuildMacOSAppleSilicon()
+    {
+        BuildMac(MacArchitectureAppleSilicon, "Builds/macOS-AppleSilicon/BullethellPrototype.app");
+    }
+
+    public static void BuildMacOSIntel()
+    {
+        BuildMac(MacArchitectureIntel, "Builds/macOS-Intel/BullethellPrototype.app");
+    }
+
+    public static void BuildMacOSUniversal()
+    {
+        BuildMac(MacArchitectureUniversal, "Builds/macOS-Universal/BullethellPrototype.app");
     }
 
     private static void Build(BuildTarget target, string outputPath)
@@ -35,6 +55,21 @@ public static class BuildScript
         if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
         {
             throw new BuildFailedException($"Build failed: {report.summary.result}");
+        }
+    }
+
+    private static void BuildMac(int architecture, string outputPath)
+    {
+        int previousArchitecture = PlayerSettings.GetArchitecture(NamedBuildTarget.Standalone);
+
+        try
+        {
+            PlayerSettings.SetArchitecture(NamedBuildTarget.Standalone, architecture);
+            Build(BuildTarget.StandaloneOSX, outputPath);
+        }
+        finally
+        {
+            PlayerSettings.SetArchitecture(NamedBuildTarget.Standalone, previousArchitecture);
         }
     }
 

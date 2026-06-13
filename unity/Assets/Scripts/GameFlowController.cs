@@ -14,6 +14,8 @@ namespace BullethellPrototype.Unity
         [SerializeField] private bool loadOnStart = true;
 
         public StageDefinition CurrentStage { get; private set; }
+        public DialogueScript CurrentDialogue { get; private set; }
+        public CharacterProfile CurrentCharacter { get; private set; }
         public string CurrentSceneId { get; private set; }
         public int CurrentDialogueIndex { get; private set; }
 
@@ -100,9 +102,7 @@ namespace BullethellPrototype.Unity
                 stage =>
                 {
                     CurrentStage = stage;
-                    CurrentDialogueIndex = 0;
-                    SetScene("stage-intro");
-                    Debug.Log($"Loaded stage: {stage.stageLabel}");
+                    StartCoroutine(LoadStageContentRoutine(stage));
                 },
                 error =>
                 {
@@ -110,21 +110,38 @@ namespace BullethellPrototype.Unity
                 });
         }
 
+        private IEnumerator LoadStageContentRoutine(StageDefinition stage)
+        {
+            yield return StageLoader.LoadDialogue(
+                stage.dialogueScriptFile,
+                dialogue => CurrentDialogue = dialogue,
+                error => Debug.LogError(error));
+
+            yield return StageLoader.LoadCharacter(
+                stage.characterProfileFile,
+                character => CurrentCharacter = character,
+                error => Debug.LogError(error));
+
+            CurrentDialogueIndex = 0;
+            SetScene("stage-intro");
+            Debug.Log($"Loaded stage: {stage.stageLabel}");
+        }
+
         private DialogueLine[] GetCurrentDialogueBlock()
         {
-            if (CurrentStage == null)
+            if (CurrentDialogue == null)
             {
                 return null;
             }
 
             if (CurrentSceneId == "dialogue-pre")
             {
-                return CurrentStage.dialogue.preBattle;
+                return CurrentDialogue.preBattle;
             }
 
             if (CurrentSceneId == "dialogue-post")
             {
-                return CurrentStage.dialogue.postBattle;
+                return CurrentDialogue.postBattle;
             }
 
             return null;

@@ -4,8 +4,9 @@ public sealed record GameStageDto(
     string Id,
     string StageLabel,
     string Description,
+    string CharacterProfileFile,
+    string DialogueScriptFile,
     IReadOnlyList<SceneDefinitionDto> Scenes,
-    DialogueSetDto Dialogue,
     PlayerTuningDto Player,
     BattleTuningDto Battle,
     IReadOnlyList<PatternReferenceDto> Patterns);
@@ -22,15 +23,6 @@ public sealed record SceneDefinitionDto(
     string StandbyMessage,
     bool ShowInFlow,
     float ReadyDelaySeconds);
-
-public sealed record DialogueSetDto(
-    string PlaceholderSpeaker,
-    IReadOnlyList<DialogueLineDto> PreBattle,
-    IReadOnlyList<DialogueLineDto> PostBattle);
-
-public sealed record DialogueLineDto(
-    string Speaker,
-    string Text);
 
 public sealed record PatternReferenceDto(
     string Id,

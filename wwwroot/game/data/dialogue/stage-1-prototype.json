@@ -1,0 +1,27 @@
+{
+  "placeholderSpeaker": "System",
+  "preBattle": [
+    {
+      "speaker": "Operator Chloe",
+      "text": "Stage 1, city-edge corridor. Sensors say the air is filthy with weak hostiles, so let's use them as a warm-up."
+    },
+    {
+      "speaker": "Operator Chloe",
+      "text": "Your frame is armed with a forward shot and three emergency bombs. If the screen gets ugly, don't be shy about clearing space."
+    },
+    {
+      "speaker": "Operator Chloe",
+      "text": "One command unit is hiding behind the trash waves. Break the formation, drop the boss, and come back in one piece."
+    }
+  ],
+  "postBattle": [
+    {
+      "speaker": "Operator Chloe",
+      "text": "Clean finish. The lane is ours, and your timing on that bomb was better than I expected."
+    },
+    {
+      "speaker": "Operator Chloe",
+      "text": "We'll tighten the patterns, add proper boss scripting, and make the next stage meaner. For now, log this as a successful prototype pass."
+    }
+  ]
+}

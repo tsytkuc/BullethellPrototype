@@ -2,6 +2,8 @@
   "id": "stage-2-prototype",
   "stageLabel": "Stage 2",
   "description": "Industrial channel prototype with longer wave chaining and a denser boss phase.",
+  "characterProfileFile": "operator-chloe.json",
+  "dialogueScriptFile": "stage-2-prototype.json",
   "scenes": [
     {
       "scene": "stage-intro",
@@ -52,33 +54,6 @@
       "readyDelaySeconds": 1.2
     }
   ],
-  "dialogue": {
-    "placeholderSpeaker": "System",
-    "preBattle": [
-      {
-        "speaker": "Operator Chloe",
-        "text": "Stage 2 opens over the flood channel. Visibility is bad, and the formation ahead is tighter than the last run."
-      },
-      {
-        "speaker": "Operator Chloe",
-        "text": "Expect more pressure from the side lanes. Keep the center clear, save one bomb for the command craft, and don\u0027t drift too wide."
-      },
-      {
-        "speaker": "Operator Chloe",
-        "text": "If this flow survives Stage 2, we can trust the current data model for a longer campaign chain."
-      }
-    ],
-    "postBattle": [
-      {
-        "speaker": "Operator Chloe",
-        "text": "Good. Stage 2 held together without the flow collapsing, and that\u0027s exactly what this prototype needed to prove."
-      },
-      {
-        "speaker": "Operator Chloe",
-        "text": "Next we can start translating the same stage data into Unity objects instead of rebuilding the rules by hand."
-      }
-    ]
-  },
   "player": {
     "lives": 3,
     "bombs": 2,
