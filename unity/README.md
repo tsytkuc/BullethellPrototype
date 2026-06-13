@@ -1,13 +1,13 @@
 # Unity Build Prep
 
-このフォルダは Unity 導入後に CLI ビルドを始めるための下準備です。
+This folder contains the preparation work for starting Unity CLI builds after Unity has been installed.
 
-## 前提
+## Prerequisites
 
-- Unity Editor がインストール済み
-- 最初に一度 `ProjectSetup.InitializeProject()` を実行して初期シーンを作ること
+- Unity Editor is installed
+- Run `ProjectSetup.InitializeProject()` once first to create the initial scene
 
-## 追加済みファイル
+## Included Files
 
 - `Assets/Editor/BuildScript.cs`
   - `BuildScript.BuildWindows64()`
@@ -28,13 +28,13 @@
   - `StageLoader.cs`
   - `GameFlowController.cs`
 - `Assets/StreamingAssets/Stages/`
-  - C# から出力されたステージ JSON
+  - Stage JSON exported from C#
 - `../scripts/build-unity-macos.sh`
-  - macOS から Unity CLI ビルドを叩く補助スクリプト
+  - Helper script for running Unity CLI builds from macOS
 - `Packages/manifest.json`
 - `ProjectSettings/ProjectVersion.txt`
 
-## 最初の初期化
+## Initial Setup
 
 ```bash
 "/Applications/Unity/Hub/Editor/6000.4.10f1/Unity.app/Contents/MacOS/Unity" \
@@ -45,11 +45,11 @@
   -logFile "$PWD/unity-setup.log"
 ```
 
-成功すると `Assets/Scenes/Main.unity` とビルド設定が作られます。
+If successful, this creates `Assets/Scenes/Main.unity` and the initial build settings.
 
-## 使い方
+## Usage
 
-Windows 向けビルド:
+Build for Windows:
 
 ```bash
 chmod +x scripts/build-unity-macos.sh
@@ -59,7 +59,7 @@ BUILD_METHOD="BuildScript.BuildWindows64" \
 scripts/build-unity-macos.sh
 ```
 
-macOS Apple Silicon 向けビルド:
+Build for macOS Apple Silicon:
 
 ```bash
 UNITY_APP="/Applications/Unity/Hub/Editor/6000.4.10f1/Unity.app" \
@@ -68,7 +68,7 @@ BUILD_METHOD="BuildScript.BuildMacOSAppleSilicon" \
 scripts/build-unity-macos.sh
 ```
 
-macOS Intel 向けビルド:
+Build for macOS Intel:
 
 ```bash
 UNITY_APP="/Applications/Unity/Hub/Editor/6000.4.10f1/Unity.app" \
@@ -77,7 +77,7 @@ BUILD_METHOD="BuildScript.BuildMacOSIntel" \
 scripts/build-unity-macos.sh
 ```
 
-macOS Universal 向けビルド:
+Build for macOS Universal:
 
 ```bash
 UNITY_APP="/Applications/Unity/Hub/Editor/6000.4.10f1/Unity.app" \
@@ -86,17 +86,17 @@ BUILD_METHOD="BuildScript.BuildMacOSUniversal" \
 scripts/build-unity-macos.sh
 ```
 
-## 出力先
+## Output Paths
 
 - Windows x64: `unity/Builds/Windows-x64/BullethellPrototype.exe`
 - macOS Apple Silicon: `unity/Builds/macOS-AppleSilicon/BullethellPrototype.app`
 - macOS Intel: `unity/Builds/macOS-Intel/BullethellPrototype.app`
 - macOS Universal: `unity/Builds/macOS-Universal/BullethellPrototype.app`
 
-## 次に必要なこと
+## Next Steps
 
-- `Bullet` プレハブを作って `BulletSpawner` に割り当てる
-- 空の GameObject に `PatternRunner` を付けて `BulletPatternAsset` を指定する
-- `GameFlowController` をシーンに置いて `stage-1-prototype` か `stage-2-prototype` を読む
-- 会話 UI と敵生成を `StageDefinition` に接続する
-- 必要な prefab や material を追加する
+- Create a `Bullet` prefab and assign it to `BulletSpawner`
+- Attach `PatternRunner` to an empty GameObject and assign a `BulletPatternAsset`
+- Place `GameFlowController` in the scene and load either `stage-1-prototype` or `stage-2-prototype`
+- Connect dialogue UI and enemy spawning to `StageDefinition`
+- Add any required prefabs and materials
