@@ -21,6 +21,11 @@
   - `BulletPatternAsset.cs`
   - `RingPatternAsset.cs`
   - `SpiralPatternAsset.cs`
+  - `StageDefinition.cs`
+  - `StageLoader.cs`
+  - `GameFlowController.cs`
+- `Assets/StreamingAssets/Stages/`
+  - C# から出力されたステージ JSON
 - `../scripts/build-unity-macos.sh`
   - macOS から Unity CLI ビルドを叩く補助スクリプト
 - `Packages/manifest.json`
@@ -69,4 +74,6 @@ scripts/build-unity-macos.sh
 
 - `Bullet` プレハブを作って `BulletSpawner` に割り当てる
 - 空の GameObject に `PatternRunner` を付けて `BulletPatternAsset` を指定する
+- `GameFlowController` をシーンに置いて `stage-1-prototype` か `stage-2-prototype` を読む
+- 会話 UI と敵生成を `StageDefinition` に接続する
 - 必要な prefab や material を追加する

@@ -92,6 +92,27 @@ dt {
   margin-bottom: 16px;
 }
 
+.stage-picker {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stage-picker span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.stage-picker select {
+  min-height: 46px;
+  border-radius: 14px;
+  border: 1px solid rgba(126, 186, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  padding: 0 14px;
+  font: inherit;
+}
+
 .status-grid div {
   padding: 14px;
   border-radius: 18px;

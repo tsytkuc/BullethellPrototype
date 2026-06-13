@@ -3,20 +3,25 @@ namespace BullethellPrototype.Models;
 public sealed record GameStageDto(
     string Id,
     string StageLabel,
-    IReadOnlyList<FlowStepDto> Flow,
-    SceneTextSetDto SceneText,
+    string Description,
+    IReadOnlyList<SceneDefinitionDto> Scenes,
     DialogueSetDto Dialogue,
     PlayerTuningDto Player,
-    BattleTuningDto Battle);
+    BattleTuningDto Battle,
+    IReadOnlyList<PatternReferenceDto> Patterns);
 
-public sealed record FlowStepDto(
+public sealed record GameStageSummaryDto(
+    string Id,
+    string StageLabel,
+    string Description);
+
+public sealed record SceneDefinitionDto(
     string Scene,
     string Label,
-    string Summary);
-
-public sealed record SceneTextSetDto(
-    IReadOnlyDictionary<string, string> Labels,
-    IReadOnlyDictionary<string, string> StandbyMessages);
+    string Summary,
+    string StandbyMessage,
+    bool ShowInFlow,
+    float ReadyDelaySeconds);
 
 public sealed record DialogueSetDto(
     string PlaceholderSpeaker,
@@ -26,6 +31,12 @@ public sealed record DialogueSetDto(
 public sealed record DialogueLineDto(
     string Speaker,
     string Text);
+
+public sealed record PatternReferenceDto(
+    string Id,
+    string Label,
+    string Usage,
+    string PreviewPatternId);
 
 public sealed record PlayerTuningDto(
     int Lives,
@@ -47,24 +58,37 @@ public sealed record PlayerShotDefinitionDto(
     int Damage);
 
 public sealed record BattleTuningDto(
-    float MobSpawnDelaySeconds,
-    float MobSpawnIntervalSeconds,
-    float BossSpawnAfterSeconds,
-    int MobBulletCount,
-    float MobBulletSpeed,
-    float MobSpreadAngleRadians,
-    float MobFireCooldownSeconds,
-    int BossAimedBulletCount,
-    float BossAimedBulletSpeed,
-    float BossAimedSpreadRadians,
-    float BossAimedCooldownSeconds,
-    int BossRadialBulletCount,
-    float BossRadialBulletSpeed,
-    float BossRadialCooldownSeconds,
     int BombBossDamage,
     int BombMobDamage,
-    EnemyPrototypeDto Mob,
-    EnemyPrototypeDto Boss);
+    IReadOnlyList<WaveDefinitionDto> Waves,
+    BossDefinitionDto Boss);
+
+public sealed record WaveDefinitionDto(
+    string Id,
+    string Label,
+    float StartSeconds,
+    float EndSeconds,
+    float SpawnIntervalSeconds,
+    string PatternId,
+    int BulletCount,
+    float BulletSpeed,
+    float SpreadAngleRadians,
+    float FireCooldownSeconds,
+    EnemyPrototypeDto Enemy,
+    IReadOnlyList<float> LaneXs);
+
+public sealed record BossDefinitionDto(
+    string PatternIdAimed,
+    string PatternIdRadial,
+    float SpawnAfterSeconds,
+    int AimedBulletCount,
+    float AimedBulletSpeed,
+    float AimedSpreadRadians,
+    float AimedCooldownSeconds,
+    int RadialBulletCount,
+    float RadialBulletSpeed,
+    float RadialCooldownSeconds,
+    EnemyPrototypeDto Enemy);
 
 public sealed record EnemyPrototypeDto(
     int HitPoints,
@@ -74,4 +98,5 @@ public sealed record EnemyPrototypeDto(
     float Drift,
     float StartX,
     float StartY,
-    float EntranceY = 0f);
+    float EntranceY = 0f,
+    int DefeatScore = 0);

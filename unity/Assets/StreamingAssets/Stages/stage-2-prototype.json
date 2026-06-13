@@ -1,7 +1,7 @@
 {
-  "id": "stage-1-prototype",
-  "stageLabel": "Stage 1",
-  "description": "City-edge corridor prototype with one warm-up wave set and a single boss finish.",
+  "id": "stage-2-prototype",
+  "stageLabel": "Stage 2",
+  "description": "Industrial channel prototype with longer wave chaining and a denser boss phase.",
   "scenes": [
     {
       "scene": "stage-intro",
@@ -57,31 +57,31 @@
     "preBattle": [
       {
         "speaker": "Operator Chloe",
-        "text": "Stage 1, city-edge corridor. Sensors say the air is filthy with weak hostiles, so let\u0027s use them as a warm-up."
+        "text": "Stage 2 opens over the flood channel. Visibility is bad, and the formation ahead is tighter than the last run."
       },
       {
         "speaker": "Operator Chloe",
-        "text": "Your frame is armed with a forward shot and three emergency bombs. If the screen gets ugly, don\u0027t be shy about clearing space."
+        "text": "Expect more pressure from the side lanes. Keep the center clear, save one bomb for the command craft, and don\u0027t drift too wide."
       },
       {
         "speaker": "Operator Chloe",
-        "text": "One command unit is hiding behind the trash waves. Break the formation, drop the boss, and come back in one piece."
+        "text": "If this flow survives Stage 2, we can trust the current data model for a longer campaign chain."
       }
     ],
     "postBattle": [
       {
         "speaker": "Operator Chloe",
-        "text": "Clean finish. The lane is ours, and your timing on that bomb was better than I expected."
+        "text": "Good. Stage 2 held together without the flow collapsing, and that\u0027s exactly what this prototype needed to prove."
       },
       {
         "speaker": "Operator Chloe",
-        "text": "We\u0027ll tighten the patterns, add proper boss scripting, and make the next stage meaner. For now, log this as a successful prototype pass."
+        "text": "Next we can start translating the same stage data into Unity objects instead of rebuilding the rules by hand."
       }
     ]
   },
   "player": {
     "lives": 3,
-    "bombs": 3,
+    "bombs": 2,
     "radius": 10,
     "speed": 320,
     "focusSpeed": 170,
@@ -114,109 +114,104 @@
     ]
   },
   "battle": {
-    "bombBossDamage": 40,
+    "bombBossDamage": 34,
     "bombMobDamage": 999,
     "waves": [
       {
-        "id": "scrap-left-right",
-        "label": "Scrap Patrol",
+        "id": "outer-lane-screen",
+        "label": "Outer Lane Screen",
         "startSeconds": 0,
-        "endSeconds": 7,
-        "spawnIntervalSeconds": 1.25,
-        "patternId": "aimed-burst",
-        "bulletCount": 3,
-        "bulletSpeed": 180,
-        "spreadAngleRadians": 0.22,
-        "fireCooldownSeconds": 1.35,
+        "endSeconds": 8,
+        "spawnIntervalSeconds": 1.05,
+        "patternId": "rotating-wave",
+        "bulletCount": 4,
+        "bulletSpeed": 205,
+        "spreadAngleRadians": 0.19,
+        "fireCooldownSeconds": 1.15,
         "enemy": {
-          "hitPoints": 6,
+          "hitPoints": 8,
           "width": 34,
           "height": 34,
-          "speedY": 110,
-          "drift": 60,
-          "startX": 140,
+          "speedY": 126,
+          "drift": 82,
+          "startX": 120,
           "startY": -30,
           "entranceY": 0,
-          "defeatScore": 120
+          "defeatScore": 160
         },
         "laneXs": [
-          140,
-          330,
-          520,
-          710
+          120,
+          300,
+          660,
+          840
         ]
       },
       {
-        "id": "tight-center-lane",
-        "label": "Center Pressure",
-        "startSeconds": 7,
-        "endSeconds": 12,
-        "spawnIntervalSeconds": 1.05,
-        "patternId": "ring-pulse",
-        "bulletCount": 5,
-        "bulletSpeed": 190,
-        "spreadAngleRadians": 0.14,
-        "fireCooldownSeconds": 1.1,
+        "id": "mid-lane-crush",
+        "label": "Mid Lane Crush",
+        "startSeconds": 8,
+        "endSeconds": 15,
+        "spawnIntervalSeconds": 0.92,
+        "patternId": "boss-sequence",
+        "bulletCount": 6,
+        "bulletSpeed": 220,
+        "spreadAngleRadians": 0.16,
+        "fireCooldownSeconds": 0.95,
         "enemy": {
-          "hitPoints": 7,
-          "width": 36,
-          "height": 36,
-          "speedY": 122,
-          "drift": 38,
-          "startX": 235,
-          "startY": -30,
+          "hitPoints": 10,
+          "width": 38,
+          "height": 38,
+          "speedY": 134,
+          "drift": 52,
+          "startX": 220,
+          "startY": -36,
           "entranceY": 0,
-          "defeatScore": 150
+          "defeatScore": 180
         },
         "laneXs": [
-          235,
-          480,
-          725
+          220,
+          400,
+          560,
+          740
         ]
       }
     ],
     "boss": {
-      "patternIdAimed": "aimed-burst",
-      "patternIdRadial": "spiral-bloom",
-      "spawnAfterSeconds": 12,
-      "aimedBulletCount": 7,
-      "aimedBulletSpeed": 230,
-      "aimedSpreadRadians": 0.18,
-      "aimedCooldownSeconds": 0.95,
-      "radialBulletCount": 16,
-      "radialBulletSpeed": 170,
-      "radialCooldownSeconds": 2.3,
+      "patternIdAimed": "boss-sequence",
+      "patternIdRadial": "rotating-wave",
+      "spawnAfterSeconds": 15,
+      "aimedBulletCount": 9,
+      "aimedBulletSpeed": 250,
+      "aimedSpreadRadians": 0.14,
+      "aimedCooldownSeconds": 0.82,
+      "radialBulletCount": 20,
+      "radialBulletSpeed": 182,
+      "radialCooldownSeconds": 1.95,
       "enemy": {
-        "hitPoints": 260,
-        "width": 140,
-        "height": 100,
-        "speedY": 80,
-        "drift": 210,
+        "hitPoints": 340,
+        "width": 154,
+        "height": 108,
+        "speedY": 86,
+        "drift": 230,
         "startX": 480,
-        "startY": -120,
-        "entranceY": 120,
-        "defeatScore": 2000
+        "startY": -140,
+        "entranceY": 116,
+        "defeatScore": 2600
       }
     }
   },
   "patterns": [
     {
-      "id": "aimed-burst",
-      "label": "Aimed Burst",
-      "usage": "Used by the warm-up mobs and aimed boss volleys.",
-      "previewPatternId": "aimed-burst"
+      "id": "rotating-wave",
+      "label": "Rotating Wave",
+      "usage": "Used for lateral pressure in the opening wave and boss radial pressure.",
+      "previewPatternId": "rotating-wave"
     },
     {
-      "id": "ring-pulse",
-      "label": "Ring Pulse",
-      "usage": "Used by the center pressure wave to create denser fan timing.",
-      "previewPatternId": "ring-pulse"
-    },
-    {
-      "id": "spiral-bloom",
-      "label": "Spiral Bloom",
-      "usage": "Used as the boss radial finisher pattern.",
-      "previewPatternId": "spiral-bloom"
+      "id": "boss-sequence",
+      "label": "Boss Sequence",
+      "usage": "Used for tighter Stage 2 attack routing and boss aimed pressure.",
+      "previewPatternId": "boss-sequence"
     }
   ]
 }

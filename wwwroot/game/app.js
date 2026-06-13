@@ -1,6 +1,7 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+const stageSelect = document.getElementById("stageSelect");
 const stageCount = document.getElementById("stageCount");
 const phaseLabel = document.getElementById("phaseLabel");
 const lifeCount = document.getElementById("lifeCount");
@@ -8,6 +9,7 @@ const bombCount = document.getElementById("bombCount");
 const scoreCount = document.getElementById("scoreCount");
 const shotCount = document.getElementById("shotCount");
 const enemyLabel = document.getElementById("enemyLabel");
+const patternLabel = document.getElementById("patternLabel");
 const fpsCount = document.getElementById("fpsCount");
 const speakerLabel = document.getElementById("speakerLabel");
 const dialogueStep = document.getElementById("dialogueStep");
@@ -20,19 +22,19 @@ const dialogueShell = document.querySelector(".dialogue-shell");
 
 const TAU = Math.PI * 2;
 const keys = new Set();
-const stageId = "stage-1-prototype";
 
+let stageSummaries = [];
 let config = null;
+let currentStageId = "stage-1-prototype";
 
 const state = {
   lastTimestamp: 0,
   fps: 0,
-  stageNumber: 1,
   scene: "stage-intro",
   sceneTimer: 0,
   score: 0,
   shotsFired: 0,
-  overlayMessage: "Stage 1",
+  overlayMessage: "",
   dialogueIndex: 0,
   playerShots: [],
   enemyShots: [],
@@ -42,11 +44,10 @@ const state = {
   clearReady: false,
   gameOverReady: false,
   battle: {
-    spawnTimer: 0,
-    waveIndex: 0,
     bossSpawned: false,
     bossDefeated: false,
     stageTime: 0,
+    waveState: {},
   },
   player: {
     x: canvas.width / 2,
@@ -63,24 +64,43 @@ const state = {
 };
 
 async function bootstrap() {
-  config = await loadStageConfig();
-  renderFlowSteps();
-  resetForStage();
+  stageSummaries = await fetchJson("/api/game/stages");
+  populateStageSelect();
+  await changeStage(currentStageId);
   requestAnimationFrame(render);
 }
 
-async function loadStageConfig() {
-  const response = await fetch(`/api/game/stages/${stageId}`);
+async function fetchJson(url) {
+  const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Failed to load stage config: ${response.status}`);
+    throw new Error(`Failed to fetch ${url}: ${response.status}`);
   }
 
   return response.json();
 }
 
+function populateStageSelect() {
+  stageSelect.innerHTML = "";
+  for (const stage of stageSummaries) {
+    const option = document.createElement("option");
+    option.value = stage.id;
+    option.textContent = `${stage.stageLabel} - ${stage.description}`;
+    stageSelect.appendChild(option);
+  }
+  stageSelect.value = currentStageId;
+}
+
+async function changeStage(stageId) {
+  currentStageId = stageId;
+  config = await fetchJson(`/api/game/stages/${stageId}`);
+  state.lastTimestamp = 0;
+  renderFlowSteps();
+  resetForStage();
+}
+
 function renderFlowSteps() {
   flowSteps.innerHTML = "";
-  for (const [index, step] of config.flow.entries()) {
+  for (const [index, step] of getFlowScenes().entries()) {
     const item = document.createElement("li");
     item.className = "flow-step-item";
     item.dataset.scene = step.scene;
@@ -89,8 +109,51 @@ function renderFlowSteps() {
   }
 }
 
+function getFlowScenes() {
+  return config.scenes.filter((scene) => scene.showInFlow);
+}
+
+function getSceneDefinition(sceneId) {
+  return config.scenes.find((scene) => scene.scene === sceneId) ?? null;
+}
+
+function getSceneLabel(sceneId) {
+  return getSceneDefinition(sceneId)?.label ?? sceneId;
+}
+
+function getSceneSummary(sceneId) {
+  return getSceneDefinition(sceneId)?.summary ?? "";
+}
+
+function getSceneReadyDelay(sceneId) {
+  return getSceneDefinition(sceneId)?.readyDelaySeconds ?? 0;
+}
+
+function getStandbyMessage(sceneId) {
+  return getSceneDefinition(sceneId)?.standbyMessage ?? "現在のフェーズでは会話表示はありません。";
+}
+
+function getDialogueBlock() {
+  if (state.scene === "dialogue-pre") return config.dialogue.preBattle;
+  if (state.scene === "dialogue-post") return config.dialogue.postBattle;
+  return null;
+}
+
+function getCurrentPatternReference() {
+  if (!config) return null;
+  if (state.scene !== "battle") return null;
+
+  const boss = state.enemies.find((enemy) => enemy.kind === "boss");
+  if (boss) {
+    return config.patterns.find((pattern) => pattern.id === config.battle.boss.patternIdAimed) ?? null;
+  }
+
+  const activeWave = getActiveWave();
+  if (!activeWave) return null;
+  return config.patterns.find((pattern) => pattern.id === activeWave.patternId) ?? null;
+}
+
 function resetForStage() {
-  state.stageNumber = parseStageNumber(config.stageLabel);
   state.scene = "stage-intro";
   state.sceneTimer = 0;
   state.score = 0;
@@ -105,11 +168,10 @@ function resetForStage() {
   state.clearReady = false;
   state.gameOverReady = false;
   state.battle = {
-    spawnTimer: 0,
-    waveIndex: 0,
     bossSpawned: false,
     bossDefeated: false,
     stageTime: 0,
+    waveState: Object.fromEntries(config.battle.waves.map((wave) => [wave.id, { nextSpawnAt: wave.startSeconds }])),
   };
   state.player = {
     x: canvas.width / 2,
@@ -127,55 +189,12 @@ function resetForStage() {
   updateHud();
 }
 
-function parseStageNumber(label) {
-  const matched = String(label).match(/\d+/);
-  return matched ? Number(matched[0]) : 1;
-}
-
-function startBattle() {
-  state.scene = "battle";
-  state.sceneTimer = 0;
-  state.overlayMessage = "";
-  state.dialogueIndex = 0;
-  state.playerShots = [];
-  state.enemyShots = [];
-  state.effects = [];
-  state.enemies = [];
-  state.battle = {
-    spawnTimer: config.battle.mobSpawnDelaySeconds,
-    waveIndex: 0,
-    bossSpawned: false,
-    bossDefeated: false,
-    stageTime: 0,
-  };
-  syncDialogue();
-  updateHud();
-}
-
-function getSceneLabel(scene) {
-  return config.sceneText.labels[scene] ?? scene;
-}
-
-function getSceneSummary(scene) {
-  return config.flow.find((step) => step.scene === scene)?.summary ?? "";
-}
-
-function getDialogueBlock() {
-  if (state.scene === "dialogue-pre") return config.dialogue.preBattle;
-  if (state.scene === "dialogue-post") return config.dialogue.postBattle;
-  return null;
-}
-
-function getStandbyMessage() {
-  return config.sceneText.standbyMessages[state.scene] ?? "現在のフェーズでは会話表示はありません。";
-}
-
 function syncDialogue() {
   const block = getDialogueBlock();
   if (!block) {
     speakerLabel.textContent = config.dialogue.placeholderSpeaker;
     dialogueStep.textContent = "- / -";
-    dialogueText.textContent = getStandbyMessage();
+    dialogueText.textContent = getStandbyMessage(state.scene);
     portraitImage.classList.add("portrait-muted");
     dialogueShell.classList.add("is-standby");
     return;
@@ -191,7 +210,8 @@ function syncDialogue() {
 
 function syncFlowUi() {
   const items = Array.from(flowSteps.querySelectorAll(".flow-step-item"));
-  const currentIndex = config.flow.findIndex((step) => step.scene === state.scene);
+  const flowScenes = getFlowScenes();
+  const currentIndex = flowScenes.findIndex((step) => step.scene === state.scene);
 
   for (const [index, item] of items.entries()) {
     item.classList.remove("is-past", "is-current", "is-future");
@@ -199,6 +219,7 @@ function syncFlowUi() {
       item.classList.add("is-future");
       continue;
     }
+
     if (index < currentIndex) item.classList.add("is-past");
     else if (index === currentIndex) item.classList.add("is-current");
     else item.classList.add("is-future");
@@ -251,6 +272,7 @@ function updateHud() {
   scoreCount.textContent = String(state.score);
   shotCount.textContent = String(state.shotsFired);
   enemyLabel.textContent = getEnemyLabel();
+  patternLabel.textContent = getCurrentPatternReference()?.label ?? "None";
   syncFlowUi();
   syncAdvanceUi();
 }
@@ -261,6 +283,23 @@ function getEnemyLabel() {
   if (boss) return `Boss ${Math.max(0, boss.hp)}`;
   if (state.enemies.length > 0) return `Zako x${state.enemies.length}`;
   return "Incoming";
+}
+
+function startBattle() {
+  state.scene = "battle";
+  state.sceneTimer = 0;
+  state.overlayMessage = "";
+  state.dialogueIndex = 0;
+  state.playerShots = [];
+  state.enemyShots = [];
+  state.effects = [];
+  state.enemies = [];
+  state.battle.bossSpawned = false;
+  state.battle.bossDefeated = false;
+  state.battle.stageTime = 0;
+  state.battle.waveState = Object.fromEntries(config.battle.waves.map((wave) => [wave.id, { nextSpawnAt: wave.startSeconds }]));
+  syncDialogue();
+  updateHud();
 }
 
 function advanceScene() {
@@ -367,37 +406,51 @@ function activateBomb() {
   updateHud();
 }
 
-function spawnMob() {
-  const lane = state.battle.waveIndex % 4;
-  const direction = lane % 2 === 0 ? 1 : -1;
-  const prototype = config.battle.mob;
+function getActiveWaves() {
+  return config.battle.waves.filter((wave) => state.battle.stageTime >= wave.startSeconds && state.battle.stageTime < wave.endSeconds);
+}
+
+function getActiveWave() {
+  return getActiveWaves()[0] ?? null;
+}
+
+function spawnWaveEnemy(wave) {
+  const waveState = state.battle.waveState[wave.id];
+  const laneIndex = waveState.spawnCount % wave.laneXs.length;
+  const direction = laneIndex % 2 === 0 ? 1 : -1;
+  waveState.spawnCount += 1;
+
   state.enemies.push({
     kind: "mob",
-    x: prototype.startX + lane * 190,
-    y: prototype.startY,
-    width: prototype.width,
-    height: prototype.height,
-    hp: prototype.hitPoints,
-    speedY: prototype.speedY,
-    drift: direction * prototype.drift,
+    waveId: wave.id,
+    patternId: wave.patternId,
+    x: wave.laneXs[laneIndex],
+    y: wave.enemy.startY,
+    width: wave.enemy.width,
+    height: wave.enemy.height,
+    hp: wave.enemy.hitPoints,
+    speedY: wave.enemy.speedY,
+    drift: direction * wave.enemy.drift,
     phase: Math.random() * TAU,
-    fireCooldown: config.battle.mobFireCooldownSeconds,
+    fireCooldown: wave.fireCooldownSeconds,
+    scoreValue: wave.enemy.defeatScore,
   });
-  state.battle.waveIndex += 1;
 }
 
 function spawnBoss() {
-  const prototype = config.battle.boss;
+  const boss = config.battle.boss;
   state.enemies.push({
     kind: "boss",
-    x: prototype.startX,
-    y: prototype.startY,
-    width: prototype.width,
-    height: prototype.height,
-    hp: prototype.hitPoints,
+    patternId: boss.patternIdAimed,
+    x: boss.enemy.startX,
+    y: boss.enemy.startY,
+    width: boss.enemy.width,
+    height: boss.enemy.height,
+    hp: boss.enemy.hitPoints,
     phase: 0,
-    fireCooldown: config.battle.bossAimedCooldownSeconds,
-    burstCooldown: config.battle.bossRadialCooldownSeconds,
+    fireCooldown: boss.aimedCooldownSeconds,
+    burstCooldown: boss.radialCooldownSeconds,
+    scoreValue: boss.enemy.defeatScore,
   });
   state.battle.bossSpawned = true;
 }
@@ -411,16 +464,22 @@ function updateBattle(deltaTime) {
   updateEnemyShots(deltaTime);
   updateEffects(deltaTime);
 
-  if (!state.battle.bossSpawned) {
-    state.battle.spawnTimer -= deltaTime;
-    if (state.battle.spawnTimer <= 0) {
-      spawnMob();
-      state.battle.spawnTimer = config.battle.mobSpawnIntervalSeconds;
+  for (const wave of getActiveWaves()) {
+    const waveState = state.battle.waveState[wave.id];
+    if (!waveState) continue;
+
+    if (waveState.spawnCount == null) {
+      waveState.spawnCount = 0;
     }
 
-    if (state.battle.stageTime >= config.battle.bossSpawnAfterSeconds) {
-      spawnBoss();
+    if (state.battle.stageTime >= waveState.nextSpawnAt) {
+      spawnWaveEnemy(wave);
+      waveState.nextSpawnAt += wave.spawnIntervalSeconds;
     }
+  }
+
+  if (!state.battle.bossSpawned && state.battle.stageTime >= config.battle.boss.spawnAfterSeconds) {
+    spawnBoss();
   }
 
   updateEnemies(deltaTime);
@@ -475,34 +534,36 @@ function updateEffects(deltaTime) {
 function updateEnemies(deltaTime) {
   for (const enemy of state.enemies) {
     if (enemy.kind === "mob") {
+      const wave = config.battle.waves.find((candidate) => candidate.id === enemy.waveId);
       enemy.y += enemy.speedY * deltaTime;
       enemy.phase += deltaTime * 2.1;
       enemy.x += Math.sin(enemy.phase) * enemy.drift * deltaTime;
       enemy.fireCooldown -= deltaTime;
-      if (enemy.fireCooldown <= 0) {
-        fireAimedSpread(enemy.x, enemy.y + 8, config.battle.mobBulletCount, config.battle.mobBulletSpeed, config.battle.mobSpreadAngleRadians);
-        enemy.fireCooldown = config.battle.mobFireCooldownSeconds;
+
+      if (wave && enemy.fireCooldown <= 0) {
+        fireAimedSpread(enemy.x, enemy.y + 8, wave.bulletCount, wave.bulletSpeed, wave.spreadAngleRadians);
+        enemy.fireCooldown = wave.fireCooldownSeconds;
       }
     } else if (enemy.kind === "boss") {
-      const bossConfig = config.battle.boss;
-      if (enemy.y < bossConfig.entranceY) {
-        enemy.y += bossConfig.speedY * deltaTime;
+      const boss = config.battle.boss;
+      if (enemy.y < boss.enemy.entranceY) {
+        enemy.y += boss.enemy.speedY * deltaTime;
       } else {
         enemy.phase += deltaTime;
-        enemy.x = bossConfig.startX + Math.sin(enemy.phase * 0.9) * bossConfig.drift;
+        enemy.x = boss.enemy.startX + Math.sin(enemy.phase * 0.9) * boss.enemy.drift;
       }
 
       enemy.fireCooldown -= deltaTime;
       enemy.burstCooldown -= deltaTime;
 
-      if (enemy.y >= bossConfig.entranceY && enemy.fireCooldown <= 0) {
-        fireAimedSpread(enemy.x, enemy.y + 24, config.battle.bossAimedBulletCount, config.battle.bossAimedBulletSpeed, config.battle.bossAimedSpreadRadians);
-        enemy.fireCooldown = config.battle.bossAimedCooldownSeconds;
+      if (enemy.y >= boss.enemy.entranceY && enemy.fireCooldown <= 0) {
+        fireAimedSpread(enemy.x, enemy.y + 24, boss.aimedBulletCount, boss.aimedBulletSpeed, boss.aimedSpreadRadians);
+        enemy.fireCooldown = boss.aimedCooldownSeconds;
       }
 
-      if (enemy.y >= bossConfig.entranceY && enemy.burstCooldown <= 0) {
-        fireRadialBurst(enemy.x, enemy.y + 12, config.battle.bossRadialBulletCount, config.battle.bossRadialBulletSpeed);
-        enemy.burstCooldown = config.battle.bossRadialCooldownSeconds;
+      if (enemy.y >= boss.enemy.entranceY && enemy.burstCooldown <= 0) {
+        fireRadialBurst(enemy.x, enemy.y + 12, boss.radialBulletCount, boss.radialBulletSpeed);
+        enemy.burstCooldown = boss.radialCooldownSeconds;
       }
     }
   }
@@ -601,7 +662,7 @@ function cleanupEnemies() {
         maxRadius: enemy.kind === "boss" ? 120 : 46,
         life: enemy.kind === "boss" ? 0.85 : 0.38,
       });
-      state.score += enemy.kind === "boss" ? 2000 : 120;
+      state.score += enemy.scoreValue ?? (enemy.kind === "boss" ? 2000 : 120);
       if (enemy.kind === "boss") {
         state.battle.bossDefeated = true;
       }
@@ -620,19 +681,19 @@ function updateScene(deltaTime) {
   state.sceneTimer += deltaTime;
 
   if (state.scene === "stage-intro") {
-    if (!state.introReady && state.sceneTimer >= 1.4) {
+    if (!state.introReady && state.sceneTimer >= getSceneReadyDelay("stage-intro")) {
       state.introReady = true;
       updateHud();
     }
   } else if (state.scene === "battle") {
     updateBattle(deltaTime);
   } else if (state.scene === "stage-clear") {
-    if (!state.clearReady && state.sceneTimer >= 1.4) {
+    if (!state.clearReady && state.sceneTimer >= getSceneReadyDelay("stage-clear")) {
       state.clearReady = true;
       updateHud();
     }
   } else if (state.scene === "game-over") {
-    if (!state.gameOverReady && state.sceneTimer >= 1.2) {
+    if (!state.gameOverReady && state.sceneTimer >= getSceneReadyDelay("game-over")) {
       state.gameOverReady = true;
       updateHud();
     }
@@ -735,7 +796,7 @@ function drawEnemies() {
       ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
       ctx.strokeRect(-enemy.width / 2, -enemy.height / 2, enemy.width, enemy.height);
 
-      const hpRatio = clamp(enemy.hp / config.battle.boss.hitPoints, 0, 1);
+      const hpRatio = clamp(enemy.hp / config.battle.boss.enemy.hitPoints, 0, 1);
       ctx.fillStyle = "rgba(8, 13, 20, 0.9)";
       ctx.fillRect(-70, -74, 140, 10);
       ctx.fillStyle = "#ff5c8a";
@@ -896,6 +957,10 @@ function onKeyDown(event) {
 function onKeyUp(event) {
   keys.delete(event.key);
 }
+
+stageSelect.addEventListener("change", async (event) => {
+  await changeStage(event.target.value);
+});
 
 advanceButton.addEventListener("click", advanceScene);
 window.addEventListener("keydown", onKeyDown);

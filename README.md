@@ -30,7 +30,7 @@ Current Web-side pattern generation is built around this library, and the Unity 
 - `Services/PatternCatalog.cs`
   - Pattern definitions and sample spawn generation
 - `Services/GameStageCatalog.cs`
-  - C# source of truth for stage flow, dialogue, and gameplay tuning
+  - C# source of truth for stage flow, dialogue, gameplay tuning, and stage expansion
 - `wwwroot/`
   - Browser UI, canvas rendering, and runtime controls
 - `unity/`
@@ -55,13 +55,19 @@ There are now two separate preview lines:
 The project is now being reorganized so the Web preview is a thin client over C# stage definitions:
 
 - `Services/GameStageCatalog.cs`
-  - owns the `Stage 1` prototype flow, dialogue, and battle tuning in C#
+  - owns the `Stage 1` and `Stage 2` prototype flow, dialogue, battle tuning, and pattern references in C#
 - `Program.cs`
-  - exposes `/api/game/stages` and `/api/game/stages/{id}`
+  - exposes `/api/game/stages`, `/api/game/stages/{id}`, and `/api/game/stages/validate`
 - `wwwroot/game/app.js`
-  - fetches stage definitions from the API instead of hardcoding the flow
+  - fetches stage definitions from the API instead of hardcoding the flow, and can switch between stage scenarios
 - `unity/Assets/StreamingAssets/Stages/`
   - JSON export target for the same stage definitions so Unity can read the same data later
+- `unity/Assets/Scripts/StageDefinition.cs`
+  - Unity-side serializable DTOs that mirror the exported stage JSON
+- `unity/Assets/Scripts/StageLoader.cs`
+  - StreamingAssets JSON loader for stage definitions
+- `unity/Assets/Scripts/GameFlowController.cs`
+  - Unity flow controller skeleton for `Intro -> Dialogue -> Battle -> Clear`
 
 This makes it easier to migrate the current Web prototype into Unity by reusing the same stage data shape instead of rewriting stage progression from scratch.
 
@@ -101,6 +107,8 @@ From the preview hub, choose either:
 - Bullet density adjustment
 - Bullet speed adjustment
 - Playback speed adjustment
+- Stage scenario switching (`Stage 1`, `Stage 2`)
+- Shared stage flow and dialogue definitions served from C#
 - Visual feel of generated bullet timelines before Unity implementation
 
 ## Unity Build

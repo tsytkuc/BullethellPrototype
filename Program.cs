@@ -21,12 +21,18 @@ app.MapGet("/api/patterns/{id}", (string id, PatternCatalog catalog) =>
     return sample is null ? Results.NotFound() : Results.Ok(sample);
 });
 
-app.MapGet("/api/game/stages", (GameStageCatalog catalog) => Results.Ok(catalog.GetAll()));
+app.MapGet("/api/game/stages", (GameStageCatalog catalog) => Results.Ok(catalog.GetSummaries()));
 
 app.MapGet("/api/game/stages/{id}", (string id, GameStageCatalog catalog) =>
 {
     var stage = catalog.TryGet(id);
     return stage is null ? Results.NotFound() : Results.Ok(stage);
+});
+
+app.MapGet("/api/game/stages/validate", (GameStageCatalog catalog) =>
+{
+    catalog.ValidateOrThrow();
+    return Results.Ok(new { valid = true });
 });
 
 app.MapFallbackToFile("index.html");
