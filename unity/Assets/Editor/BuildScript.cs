@@ -9,10 +9,19 @@ public static class BuildScript
     private const int MacArchitectureIntel = 0;
     private const int MacArchitectureAppleSilicon = 1;
     private const int MacArchitectureUniversal = 2;
+    private const string ExportPackagePath = "Exports/BullethellPrototype.unitypackage";
 
     private static readonly string[] Scenes =
     {
         "Assets/Scenes/Main.unity",
+    };
+
+    private static readonly string[] PackageRoots =
+    {
+        "Assets/Editor",
+        "Assets/Scenes",
+        "Assets/Scripts",
+        "Assets/StreamingAssets",
     };
 
     public static void BuildWindows64()
@@ -38,6 +47,18 @@ public static class BuildScript
     public static void BuildMacOSUniversal()
     {
         BuildMac(MacArchitectureUniversal, "Builds/macOS-Universal/BullethellPrototype.app");
+    }
+
+    public static void ExportUnityPackage()
+    {
+        EnsureScenesExist();
+
+        Directory.CreateDirectory(Path.GetDirectoryName(ExportPackagePath) ?? "Exports");
+
+        AssetDatabase.ExportPackage(
+            PackageRoots,
+            ExportPackagePath,
+            ExportPackageOptions.Recurse | ExportPackageOptions.IncludeDependencies);
     }
 
     private static void Build(BuildTarget target, string outputPath)
