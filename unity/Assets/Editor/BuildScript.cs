@@ -1,6 +1,8 @@
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build;
+using UnityEditor.SceneManagement;
+using UnityEngine;
 
 public static class BuildScript
 {
@@ -79,8 +81,33 @@ public static class BuildScript
         {
             if (!File.Exists(scene))
             {
-                throw new FileNotFoundException($"Scene not found: {scene}");
+                CreateDefaultScene(scene);
             }
+        }
+
+        EditorBuildSettings.scenes = new[]
+        {
+            new EditorBuildSettingsScene(Scenes[0], true),
+        };
+    }
+
+    private static void CreateDefaultScene(string scenePath)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(scenePath) ?? "Assets/Scenes");
+
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+        scene.name = Path.GetFileNameWithoutExtension(scenePath);
+
+        var camera = Camera.main;
+        if (camera != null)
+        {
+            camera.backgroundColor = new Color(0.03f, 0.07f, 0.14f);
+            camera.clearFlags = CameraClearFlags.SolidColor;
+        }
+
+        if (!EditorSceneManager.SaveScene(scene, scenePath))
+        {
+            throw new FileNotFoundException($"Scene could not be created: {scenePath}");
         }
     }
 }
